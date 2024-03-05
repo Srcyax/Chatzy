@@ -1,13 +1,9 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ChatBoard } from "./Chat/Chat";
 import Link from "next/link";
@@ -35,7 +31,7 @@ export default function Dashboard() {
 		return <></>;
 	}
 
-	const { username, about } = data?.user;
+	const { username } = data;
 
 	return (
 		<div>
@@ -45,9 +41,7 @@ export default function Dashboard() {
 				</Link>
 				<Avatar>
 					<AvatarImage src="" alt="@shadcn" />
-					<AvatarFallback className="text-[20px]">
-						{username.charAt(0)}
-					</AvatarFallback>
+					<AvatarFallback className="text-[20px]">{username.charAt(0)}</AvatarFallback>
 				</Avatar>
 			</header>
 			<main className="m-10">

@@ -12,10 +12,7 @@ export async function GET() {
 	}
 
 	try {
-		const validateToken = jwt.verify(
-			token.value,
-			process.env.JWT_SECRET as string
-		) as JwtPayload;
+		const validateToken = jwt.verify(token.value, process.env.JWT_SECRET as string) as JwtPayload;
 
 		if (!validateToken) {
 			return NextResponse.json({ error: "Not allowed" }, { status: 401 });
@@ -31,9 +28,9 @@ export async function GET() {
 			return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 		}
 
-		const { pasword, ...user } = jwt.decode(token.value) as JwtPayload;
+		const { username } = jwt.decode(token.value) as JwtPayload;
 
-		return NextResponse.json({ message: "authenticated", user });
+		return NextResponse.json({ username });
 	} catch (error) {
 		console.log(error);
 		return NextResponse.json({ error: error }, { status: 401 });
