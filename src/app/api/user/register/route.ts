@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 			data: {
 				username,
 				password: passwordHash as string,
-				about: "Hello there 👋",
+				about: "Hello there",
 			},
 		});
 
@@ -26,20 +26,11 @@ export async function POST(req: NextRequest) {
 
 		return NextResponse.json({ message: "sucess" });
 	} catch (err) {
-		if (
-			err instanceof PrismaClientKnownRequestError &&
-			err.code === "P2002"
-		) {
-			return NextResponse.json(
-				{ error: "This user is already registered" },
-				{ status: 400 }
-			);
+		if (err instanceof PrismaClientKnownRequestError && err.code === "P2002") {
+			return NextResponse.json({ error: "This user is already registered" }, { status: 400 });
 		}
 		console.log(error);
-		return NextResponse.json(
-			{ error: "Error registering user" },
-			{ status: 400 }
-		);
+		return NextResponse.json({ error: "Error registering user" }, { status: 400 });
 	} finally {
 		await prisma.$disconnect();
 	}
