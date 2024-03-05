@@ -4,10 +4,19 @@ import bcrypt from "bcrypt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { GenerateAuthToken } from "@/functions/user/authToken";
 import { error } from "console";
+import { ValidateInput } from "@/functions/user/validateInput";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 	const { username, password } = body;
+
+	if (!ValidateInput(username, 10)) {
+		return NextResponse.json({ error: "Invalid inputs" });
+	}
+
+	if (!ValidateInput(password, 10)) {
+		return NextResponse.json({ error: "Invalid inputs" });
+	}
 
 	const prisma = new PrismaClient();
 

@@ -2,10 +2,15 @@ import { PrismaClient } from "@prisma/client";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { ValidateInput } from "@/functions/user/validateInput";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 	const { about } = body;
+
+	if (!ValidateInput(about, 125)) {
+		return NextResponse.json({ error: "Invalid inputs" });
+	}
 
 	const prisma = new PrismaClient();
 
