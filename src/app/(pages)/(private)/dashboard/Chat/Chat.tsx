@@ -55,7 +55,6 @@ export function ChatBoard() {
 	});
 
 	function PostMessage(data: any) {
-		console.log(data);
 		return axios
 			.post("/api/user/comment", {
 				comment: data.message,
@@ -81,11 +80,7 @@ export function ChatBoard() {
 		<>
 			<ChatBody comments={comments} />
 
-			<form
-				className="flex gap-4"
-				onSubmit={handleSubmit(PostMessage)}
-				action=""
-			>
+			<form className="flex gap-4" onSubmit={handleSubmit(PostMessage)} action="">
 				<div className="w-full">
 					<Input
 						{...register("message")}
@@ -97,9 +92,7 @@ export function ChatBoard() {
 						placeholder="Type something..."
 					/>
 					{errors.message?.message && (
-						<p className="my-1 text-[12px] text-red-500">
-							{errors.message?.message as string}
-						</p>
+						<p className="my-1 text-[12px] text-red-500">{errors.message?.message as string}</p>
 					)}
 				</div>
 

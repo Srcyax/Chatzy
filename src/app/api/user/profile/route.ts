@@ -23,12 +23,9 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ userProfile, isLocalUser: false });
 		}
 
-		const { idLocal } = jwt.verify(
-			token.value,
-			process.env.JWT_SECRET as string
-		) as JwtPayload;
+		const user = jwt.verify(token.value, process.env.JWT_SECRET as string) as JwtPayload;
 
-		return NextResponse.json({ userProfile, isLocalUser: true });
+		return NextResponse.json({ userProfile, isOwner: user.id === id });
 	} catch (error) {
 		console.log(error);
 		return NextResponse.json({ error: error }, { status: 500 });

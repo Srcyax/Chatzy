@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 	}
 
 	try {
-		const user = (await jwt.decode(token.value)) as JwtPayload;
+		const user = jwt.decode(token.value) as JwtPayload;
 
 		if (!user.id) {
 			return NextResponse.json({ error: "Not allowed" }, { status: 401 });
@@ -53,6 +53,22 @@ export async function GET() {
 	const prisma = new PrismaClient();
 	try {
 		const comments = await prisma.comment.findMany();
+
+		comments.forEach(async (validComment) => {
+			const validUser = await prisma.user.findUnique({
+				where: {
+					id: validComment.authorId,
+				},
+			});
+
+			if (!validUser) {
+				await prisma.comment.delete({
+					where: {
+						id: validComment.id,
+					},
+				});
+			}
+		});
 
 		return NextResponse.json({ comments });
 	} catch (error) {

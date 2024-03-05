@@ -6,6 +6,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { Undo2 } from "lucide-react";
+import { About } from "../Components/About";
+
 export default function Page({ params }: any) {
 	const router = useRouter();
 
@@ -48,9 +50,7 @@ export default function Page({ params }: any) {
 						) : (
 							<Avatar className="shadow-xl w-20 h-20">
 								<AvatarImage src="" />
-								<AvatarFallback className="text-2xl">
-									{data?.userProfile.username.charAt(0)}
-								</AvatarFallback>
+								<AvatarFallback className="text-2xl">{data?.userProfile.username.charAt(0)}</AvatarFallback>
 							</Avatar>
 						)}
 						<div className="flex flex-col gap-2 items-center">
@@ -70,20 +70,7 @@ export default function Page({ params }: any) {
 							)}
 						</div>
 					</div>
-					<div className="flex flex-col gap-2 items-center justify-center w-full border-2 shadow-3xl p-5 rounded-md">
-						<div className="w-full h-full">
-							{isLoading ? (
-								<div className="flex flex-col gap-2">
-									<Skeleton className="w-96 smartphone:w-48 h-4" />
-									<Skeleton className="w-72 smartphone:w-40 h-4" />
-								</div>
-							) : (
-								<div>
-									<h1>{data?.userProfile?.about}</h1>
-								</div>
-							)}
-						</div>
-					</div>
+					<About isLoading={isLoading} isOwner={data?.isOwner} about={data?.userProfile?.about} />
 				</div>
 			</main>
 		</div>
