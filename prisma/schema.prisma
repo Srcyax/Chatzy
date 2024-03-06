@@ -22,8 +22,8 @@ model User {
 }
 
 model ActiveUsers {
-    id          Int      @id @default(autoincrement())
-     username    String   @unique
+  id          Int      @id @default(autoincrement())
+  username    String   @unique
 }
 
 model Comment {
