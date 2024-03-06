@@ -45,7 +45,7 @@ export function ChatBoard() {
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
-	const { data } = useQuery({
+	const { data, isError, isLoading, isRefetching } = useQuery({
 		queryKey: ["comments"],
 		queryFn: async () => {
 			return axios.get("/api/user/comment").then((res) => {
@@ -54,7 +54,7 @@ export function ChatBoard() {
 		},
 	});
 
-	function PostMessage(data: any) {
+	async function PostMessage(data: any) {
 		return axios
 			.post("/api/user/comment", {
 				comment: data.message,

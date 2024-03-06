@@ -7,6 +7,14 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ChatBoard } from "./Chat/Chat";
 import Link from "next/link";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { useEffect, useState } from "react";
+import { ActiveUsers } from "./activeUsers";
+
+type User = {
+	id: number;
+	username: string;
+};
 
 export default function Dashboard() {
 	const router = useRouter();
@@ -41,12 +49,20 @@ export default function Dashboard() {
 				</Link>
 				<Avatar>
 					<AvatarImage src="" alt="@shadcn" />
-					<AvatarFallback className="text-[20px]">{username.charAt(0)}</AvatarFallback>
+					<AvatarFallback>{username.charAt(0).toUpperCase()}</AvatarFallback>
 				</Avatar>
 			</header>
-			<main className="m-10">
-				<div className="flex flex-col gap-4 w-1/2">
+			<main className="m-10 flex gap-12 laptop:flex-row tablet:flex-col smartphone:flex-col">
+				<div className="flex flex-col gap-4 w-full ">
 					<ChatBoard />
+				</div>
+				<div className="shadow-xl border p-4 rounded-md laptop:w-96 tablet:w-full smartphone:w-full">
+					<div className="flex flex-col items-center gap-4 rounded-md p-5">
+						<h1 className="text-center">
+							<strong className="text-green-400">Online</strong>
+						</h1>
+						<ActiveUsers />
+					</div>
 				</div>
 			</main>
 		</div>

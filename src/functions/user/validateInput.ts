@@ -1,3 +1,5 @@
+import { setTimeout } from "timers";
+
 export function ValidateInput(text: string, length: number) {
 	if (!text.replace(/[^a-zA-Z0-9 ]/g, "")) {
 		return false;

@@ -1,10 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-	HoverCard,
-	HoverCardContent,
-	HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 
 type Comments = {
@@ -14,23 +11,19 @@ type Comments = {
 	author: string;
 };
 
-export default function ChatBody({
-	comments,
-}: {
-	comments: Comments[] | undefined;
-}) {
+export default function ChatBody({ comments }: { comments: Comments[] | undefined }) {
 	const router = useRouter();
 	return (
 		<ScrollArea className="h-72 rounded-md border shadow-inner">
 			<div className="p-4">
-				{comments &&
+				{comments ? (
 					comments?.map((chat, index) => (
 						<div key={index} className="my-4">
 							<div className="flex gap-2 items-center">
 								<Avatar>
 									<AvatarImage src="" alt="@shadcn" />
-									<AvatarFallback className="text-[20px] bg-orange-200">
-										{chat.author.charAt(0)}
+									<AvatarFallback className=" bg-orange-200">
+										{chat.author.charAt(0).toUpperCase()}
 									</AvatarFallback>
 								</Avatar>
 								<div className="flex flex-col justify-center">
@@ -38,9 +31,7 @@ export default function ChatBody({
 										<HoverCardTrigger asChild>
 											<h1
 												onClick={() => {
-													router.push(
-														`/user/profile/${chat.authorId}`
-													);
+													router.push(`/user/profile/${chat.authorId}`);
 												}}
 												className="text-[15px] font-medium hover:underline hover:cursor-pointer"
 											>
@@ -50,33 +41,33 @@ export default function ChatBody({
 										<HoverCardContent className="w-60">
 											<div className="flex items-center space-x-4">
 												<Avatar>
-													<AvatarImage
-														src=""
-														alt="@shadcn"
-													/>
+													<AvatarImage src="" alt="@shadcn" />
 													<AvatarFallback className="text-[20px] bg-orange-200">
 														{chat.author.charAt(0)}
 													</AvatarFallback>
 												</Avatar>
 												<div className="overflow-hidden h-14">
-													<h1 className="text-[15px] font-medium">
-														{chat.author}
-													</h1>
-													<p className="truncate">
-														{chat.author}
-													</p>
+													<h1 className="text-[15px] font-medium">{chat.author}</h1>
+													<p className="truncate">{chat.author}</p>
 												</div>
 											</div>
 										</HoverCardContent>
 									</HoverCard>
 
-									<h1 className="text-[13px] text-zinc-700">
-										{chat.comment}
-									</h1>
+									<h1 className="text-[13px] text-zinc-700">{chat.comment}</h1>
 								</div>
 							</div>
 						</div>
-					))}
+					))
+				) : (
+					<div className="my-4 flex gap-2 items-center">
+						<Skeleton className="w-10 h-10 rounded-full" />
+						<div className="flex flex-col gap-2">
+							<Skeleton className="w-8 h-3 rounded-sm" />
+							<Skeleton className="w-14 h-3 rounded-sm" />
+						</div>
+					</div>
+				)}
 			</div>
 		</ScrollArea>
 	);

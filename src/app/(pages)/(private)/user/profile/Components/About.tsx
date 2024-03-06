@@ -77,12 +77,10 @@ export function About({
 					</div>
 				) : (
 					<div>
-						{isOwner && !edit && (
-							<div className="flex gap-4">
-								<h1>{about}</h1>
-								<Edit className="cursor-pointer" onClick={() => setEdit(true)} />
-							</div>
-						)}
+						<div className="flex gap-4">
+							<h1>{about}</h1>
+							{isOwner && !edit && <Edit className="cursor-pointer" onClick={() => setEdit(true)} />}
+						</div>
 
 						{edit && (
 							<form onSubmit={handleSubmit(EditAbout)}>

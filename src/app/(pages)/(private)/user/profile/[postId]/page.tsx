@@ -11,7 +11,7 @@ import { About } from "../Components/About";
 export default function Page({ params }: any) {
 	const router = useRouter();
 
-	const { data, isLoading, isError } = useQuery({
+	const { data, isLoading, isError, isRefetching } = useQuery({
 		queryKey: ["user-profile"],
 		queryFn: async () => {
 			return axios
@@ -45,16 +45,16 @@ export default function Page({ params }: any) {
 				</div>
 				<div className="flex laptop:flex-row tablet:flex-col smartphone:flex-col gap-2 smartphone:gap-4 w-full">
 					<div className="flex flex-col gap-2 items-center justify-start border-2 shadow-3xl px-16 py-5 h-64 rounded-md">
-						{isLoading ? (
+						{isLoading || isRefetching ? (
 							<Skeleton className="w-20 h-20 rounded-full" />
 						) : (
 							<Avatar className="shadow-xl w-20 h-20">
 								<AvatarImage src="" />
-								<AvatarFallback className="text-2xl">{data?.userProfile.username.charAt(0)}</AvatarFallback>
+								<AvatarFallback>{data?.userProfile.username.charAt(0).toUpperCase()}</AvatarFallback>
 							</Avatar>
 						)}
 						<div className="flex flex-col gap-2 items-center">
-							{isLoading ? (
+							{isLoading || isRefetching ? (
 								<div className="flex flex-col gap-2 items-center">
 									<Skeleton className="w-16 h-4" />
 									<Skeleton className="w-5 h-4" />
@@ -70,7 +70,11 @@ export default function Page({ params }: any) {
 							)}
 						</div>
 					</div>
-					<About isLoading={isLoading} isOwner={data?.isOwner} about={data?.userProfile?.about} />
+					<About
+						isLoading={isLoading || isRefetching}
+						isOwner={data?.isOwner}
+						about={data?.userProfile?.about}
+					/>
 				</div>
 			</main>
 		</div>
