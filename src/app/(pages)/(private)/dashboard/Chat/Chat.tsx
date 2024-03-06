@@ -48,9 +48,11 @@ export function ChatBoard() {
 	const { data, isError, isLoading, isRefetching } = useQuery({
 		queryKey: ["comments"],
 		queryFn: async () => {
-			return axios.get("/api/user/comment").then((res) => {
+			await axios.get("/api/user/comment").then((res) => {
 				getComments(res.data.comments);
 			});
+
+			return "";
 		},
 	});
 
@@ -83,6 +85,7 @@ export function ChatBoard() {
 			<form className="flex gap-4" onSubmit={handleSubmit(PostMessage)} action="">
 				<div className="w-full">
 					<Input
+						disabled={isLoading}
 						{...register("message")}
 						className="shadow-xl"
 						type="text"
@@ -96,7 +99,7 @@ export function ChatBoard() {
 					)}
 				</div>
 
-				<Button>
+				<Button disabled={isLoading}>
 					<Send width={20} />
 				</Button>
 			</form>

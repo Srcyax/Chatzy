@@ -22,6 +22,8 @@ export function ActiveUsers() {
 			await axios.post("/api/ping").then(() => {
 				axios.get("/api/ping").then(async (res) => getUsers(res.data.users));
 			});
+
+			return "";
 		},
 	});
 
@@ -37,6 +39,7 @@ export function ActiveUsers() {
 	}
 
 	useEffect(() => {
+		if (!data) return;
 		setTimeout(() => {
 			if (isFetching || isLoading) {
 				return;
