@@ -44,6 +44,15 @@ export async function POST(req: NextRequest) {
 export async function GET() {
 	const prisma = new PrismaClient();
 
-	const activeUsers = await prisma.activeUsers.findMany();
-	return NextResponse.json({ users: activeUsers });
+	try {
+		const activeUsers = await prisma.activeUsers.findMany();
+
+		if (!activeUsers) return NextResponse.json({ users: null });
+
+		return NextResponse.json({ users: activeUsers });
+	} catch (error) {
+		return NextResponse.json({ error: error });
+	} finally {
+		await prisma.$disconnect();
+	}
 }
