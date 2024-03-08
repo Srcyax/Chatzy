@@ -21,8 +21,6 @@ export async function POST(req: NextRequest) {
 					id: user.id,
 				},
 			});
-
-			console.log(deleteuser);
 		}
 	}
 
