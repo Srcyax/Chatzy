@@ -39,15 +39,14 @@ export function ActiveUsers() {
 	}
 
 	useEffect(() => {
-		if (!data) return;
-		setTimeout(() => {
-			if (isFetching || isLoading) {
-				return;
+		const intervalId = setInterval(() => {
+			if (!isLoading && !isFetching) {
+				UpdateUsers();
 			}
+		}, 11000);
 
-			UpdateUsers();
-		}, 5000); // 5 segundos
-	}, [isFetching]);
+		return () => clearInterval(intervalId);
+	}, [isLoading, isFetching]);
 
 	const { mutate } = useMutation({
 		mutationKey: ["updateactiveusers"],

@@ -18,21 +18,23 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({});
 		}
 
-		const userExists = await prisma.activeUsers.findUnique({
-			where: {
-				id: user.id,
-			},
+		const findUser = await prisma.activeUsers.findUnique({
+			where: { id: user.id },
 		});
 
-		if (userExists) {
-			return NextResponse.json({});
+		if (!findUser) {
+			await prisma.activeUsers.create({
+				data: {
+					id: user.id,
+					username: user.username,
+					lastActive: new Date(), // Define lastActive como a data e hora atual
+				},
+			});
 		}
 
-		await prisma.activeUsers.create({
-			data: {
-				id: user.id,
-				username: user.username,
-			},
+		const updatedUser = await prisma.activeUsers.update({
+			where: { id: user.id },
+			data: { lastActive: new Date() },
 		});
 
 		return NextResponse.json({});
@@ -46,7 +48,6 @@ export async function GET() {
 
 	try {
 		const activeUsers = await prisma.activeUsers.findMany();
-
 		if (!activeUsers) return NextResponse.json({ users: null });
 
 		return NextResponse.json({ users: activeUsers });

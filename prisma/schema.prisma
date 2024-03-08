@@ -14,16 +14,17 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  username    String   @unique
+  id          Int       @id @default(autoincrement())
+  username    String    @unique
   password    String?
   about       String
-  role        Role?   @default(registered)
+  role        Role?     @default(registered)
 }
 
 model ActiveUsers {
-  id          Int      @id @default(autoincrement())
-  username    String   @unique
+  id          Int       @id @default(autoincrement())
+  username    String    @unique
+  lastActive  DateTime  @default(now())
 }
 
 model Comment {

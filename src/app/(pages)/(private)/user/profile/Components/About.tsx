@@ -78,7 +78,7 @@ export function About({
 				) : (
 					<div>
 						<div className="flex gap-4">
-							<h1>{about}</h1>
+							<h1>{!edit && about}</h1>
 							{isOwner && !edit && <Edit className="cursor-pointer" onClick={() => setEdit(true)} />}
 						</div>
 

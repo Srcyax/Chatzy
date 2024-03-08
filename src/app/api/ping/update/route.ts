@@ -1,27 +1,30 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { differenceInMinutes, differenceInSeconds } from "date-fns";
 import { PrismaClient } from "@prisma/client";
 
 export async function POST(req: NextRequest) {
 	const token = cookies().get("token");
 	const prisma = new PrismaClient();
 
-	if (!token) {
-		return NextResponse.json({});
-	}
+	const inactivityThreshold = 10;
+	const currentTime = new Date();
 
-	try {
-		const user = jwt.verify(token.value, process.env.JWT_SECRET as string) as JwtPayload;
+	const activeUsers = await prisma.activeUsers.findMany();
 
-		if (!user) {
-			return NextResponse.json({});
+	for (const user of activeUsers) {
+		const lastActivity = user.lastActive;
+		const minutesSinceLastActivity = differenceInSeconds(currentTime, lastActivity);
+		if (minutesSinceLastActivity > inactivityThreshold) {
+			const deleteuser = await prisma.activeUsers.delete({
+				where: {
+					id: user.id,
+				},
+			});
+
+			console.log(deleteuser);
 		}
-
-		await prisma.activeUsers.deleteMany();
-
-		return NextResponse.json({});
-	} catch (error) {
-		return NextResponse.json({ error: error });
 	}
+
+	return NextResponse.json({});
 }
