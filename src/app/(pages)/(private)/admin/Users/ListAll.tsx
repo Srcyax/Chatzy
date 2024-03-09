@@ -17,6 +17,7 @@ export default function ListAllUsers() {
 
 			return "";
 		},
+		refetchInterval: 5000,
 	});
 
 	return (
