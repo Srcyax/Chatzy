@@ -21,19 +21,11 @@ export default function Admin() {
 	});
 
 	if (isLoading) {
-		return (
-			<>
-				<h1>Cu</h1>
-			</>
-		);
+		return <></>;
 	}
 
 	if (isError) {
-		return (
-			<>
-				<h1>Cuerror</h1>
-			</>
-		);
+		return <></>;
 	}
 
 	const { username, role } = data.user;
