@@ -4,12 +4,13 @@ import { cookies } from "next/headers";
 type User = {
 	id: number;
 	username: string;
+	role: string | null;
 	about: string;
 };
 
 export async function GenerateAuthToken(user: User) {
 	const token = jwt.sign(
-		{ username: user.username, id: user.id, about: user.about },
+		{ username: user.username, id: user.id, role: user.role, about: user.about },
 		process.env.JWT_SECRET as string,
 		{
 			expiresIn: "2h",

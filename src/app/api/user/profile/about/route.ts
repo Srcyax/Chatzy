@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/functions/prisma";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
@@ -11,8 +11,6 @@ export async function POST(req: NextRequest) {
 	if (!ValidateInput(about, 125)) {
 		return NextResponse.json({ error: "Invalid inputs" });
 	}
-
-	const prisma = new PrismaClient();
 
 	const token = cookies().get("token");
 
@@ -39,7 +37,5 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({ message: "About me edited successfully" });
 	} catch (error) {
 		return NextResponse.json({ error: error }, { status: 500 });
-	} finally {
-		await prisma.$disconnect();
 	}
 }

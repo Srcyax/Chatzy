@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/functions/prisma";
 import bcrypt from "bcrypt";
 import { GenerateAuthToken } from "@/functions/user/authToken";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
-
 	const { username, password } = body;
-	const prisma = new PrismaClient();
 
 	try {
 		const user = await prisma.user.findUnique({
@@ -31,7 +29,5 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({ message: "sucess" });
 	} catch (error) {
 		return NextResponse.json({ error: error }, { status: 500 });
-	} finally {
-		await prisma.$disconnect();
 	}
 }

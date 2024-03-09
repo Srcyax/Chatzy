@@ -54,6 +54,7 @@ export function ChatBoard() {
 
 			return "";
 		},
+		refetchInterval: 5000,
 	});
 
 	async function PostMessage(data: any) {

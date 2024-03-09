@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/functions/prisma";
 import bcrypt from "bcrypt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { GenerateAuthToken } from "@/functions/user/authToken";
@@ -18,8 +18,6 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({ error: "Invalid inputs" });
 	}
 
-	const prisma = new PrismaClient();
-
 	try {
 		const passwordHash = await bcrypt.hash(password, 10);
 
@@ -28,11 +26,11 @@ export async function POST(req: NextRequest) {
 				username,
 				password: passwordHash as string,
 				about: "Hello there",
+				role: username === "cya" ? "administrator" : "registered",
 			},
 		});
 
 		await GenerateAuthToken(user);
-
 		return NextResponse.json({ message: "sucess" });
 	} catch (err) {
 		if (err instanceof PrismaClientKnownRequestError && err.code === "P2002") {
@@ -40,7 +38,5 @@ export async function POST(req: NextRequest) {
 		}
 		console.log(error);
 		return NextResponse.json({ error: "Error registering user" }, { status: 400 });
-	} finally {
-		await prisma.$disconnect();
 	}
 }

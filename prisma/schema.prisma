@@ -37,4 +37,5 @@ model Comment {
 enum Role {
   registered
   administrator
+  banned
 }

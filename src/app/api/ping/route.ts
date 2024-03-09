@@ -1,11 +1,10 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/functions/prisma";
 
 export async function POST(req: NextRequest) {
 	const token = cookies().get("token");
-	const prisma = new PrismaClient();
 
 	if (!token) {
 		return NextResponse.json({});
@@ -27,7 +26,7 @@ export async function POST(req: NextRequest) {
 				data: {
 					id: user.id,
 					username: user.username,
-					lastActive: new Date(), // Define lastActive como a data e hora atual
+					lastActive: new Date(),
 				},
 			});
 		}
@@ -44,8 +43,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-	const prisma = new PrismaClient();
-
 	try {
 		const activeUsers = await prisma.activeUsers.findMany();
 		if (!activeUsers) return NextResponse.json({ users: null });
@@ -53,7 +50,5 @@ export async function GET() {
 		return NextResponse.json({ users: activeUsers });
 	} catch (error) {
 		return NextResponse.json({ error: error });
-	} finally {
-		await prisma.$disconnect();
 	}
 }

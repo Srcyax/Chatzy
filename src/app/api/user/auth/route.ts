@@ -1,11 +1,10 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/functions/prisma";
 
 export async function GET() {
 	const token = cookies().get("token");
-	const prisma = new PrismaClient();
 
 	if (!token) {
 		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
@@ -28,9 +27,9 @@ export async function GET() {
 			return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 		}
 
-		const { username } = jwt.decode(token.value) as JwtPayload;
+		const { password, ...user } = jwt.decode(token.value) as JwtPayload;
 
-		return NextResponse.json({ username });
+		return NextResponse.json({ user });
 	} catch (error) {
 		console.log(error);
 		return NextResponse.json({ error: error }, { status: 401 });

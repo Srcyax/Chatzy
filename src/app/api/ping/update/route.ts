@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { differenceInMinutes, differenceInSeconds } from "date-fns";
+import { differenceInSeconds } from "date-fns";
 import { PrismaClient } from "@prisma/client";
 
 export async function POST(req: NextRequest) {
@@ -10,19 +10,32 @@ export async function POST(req: NextRequest) {
 	const inactivityThreshold = 10;
 	const currentTime = new Date();
 
-	const activeUsers = await prisma.activeUsers.findMany();
+	try {
+		const activeUsers = await prisma.activeUsers.findMany();
 
-	for (const user of activeUsers) {
-		const lastActivity = user.lastActive;
-		const minutesSinceLastActivity = differenceInSeconds(currentTime, lastActivity);
-		if (minutesSinceLastActivity > inactivityThreshold) {
-			const deleteuser = await prisma.activeUsers.delete({
-				where: {
-					id: user.id,
-				},
-			});
+		for (const user of activeUsers) {
+			const lastActivity = user.lastActive;
+			const secondsSinceLastActivity = differenceInSeconds(currentTime, lastActivity);
+			if (secondsSinceLastActivity > inactivityThreshold) {
+				try {
+					const removeUser = await prisma.activeUsers.delete({
+						where: {
+							id: user.id,
+						},
+					});
+
+					if (!removeUser) {
+						console.error("Failed to remove user:", user.id);
+					}
+				} catch (error) {
+					console.error("Error deleting user:", error);
+				}
+			}
 		}
-	}
 
-	return NextResponse.json({});
+		return NextResponse.json({});
+	} catch (error) {
+		console.error("Error fetching active users:", error);
+		return NextResponse.json({ error: error }, { status: 500 });
+	}
 }

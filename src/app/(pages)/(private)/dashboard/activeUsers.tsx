@@ -65,7 +65,6 @@ export function ActiveUsers() {
 							<AvatarImage src="" alt="@shadcn" />
 							<AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
 						</Avatar>
-						<h1 className="text-center text-[13px]">{user.username}</h1>
 					</div>
 				))
 			) : isFetching ? (
