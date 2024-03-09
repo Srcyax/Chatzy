@@ -61,7 +61,9 @@ export default function Page({ params }: any) {
 								</div>
 							) : (
 								<div className="flex flex-col gap-2 items-center">
-									<h1>{data?.userProfile?.username}</h1>
+									<h1 className={`${data?.userProfile.role === "banned" ? "line-through" : ""}`}>
+										{data?.userProfile?.username}
+									</h1>
 									<div className="px-5 bg-zinc-800 text-white rounded-sm">
 										<h1>{data?.userProfile.role}</h1>
 									</div>

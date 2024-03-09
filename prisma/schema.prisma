@@ -19,6 +19,7 @@ model User {
   password    String?
   about       String
   role        Role?     @default(registered)
+  comments    Comment[]
 }
 
 model ActiveUsers {
@@ -29,9 +30,9 @@ model ActiveUsers {
 
 model Comment {
   id          Int       @id @default(autoincrement())
-  comment     String   
-  author      String
-  authorId    Int       
+  text        String   
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    Int
 }
 
 enum Role {

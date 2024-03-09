@@ -13,12 +13,16 @@ import ChatBody from "./ChatBody";
 
 type Comments = {
 	id: number;
-	comment: string;
+	text: string;
 	authorId: number;
-	author: string;
+	author: {
+		username: string;
+		role: string;
+		about: string;
+	};
 };
 
-export function ChatBoard() {
+export function ChatBoard({ role }: { role: string | null }) {
 	const schema = z.object({
 		message: z
 			.string()
@@ -71,13 +75,17 @@ export function ChatBoard() {
 						reset();
 					});
 			})
-			.catch((error) => {});
+			.catch((error) => {
+				reset();
+			});
 	}
 
 	const { mutate } = useMutation({
 		mutationKey: ["commentsmutate"],
 		mutationFn: PostMessage,
 	});
+
+	const banned = role === "banned";
 
 	return (
 		<>
@@ -86,21 +94,21 @@ export function ChatBoard() {
 			<form className="flex gap-4" onSubmit={handleSubmit(PostMessage)} action="">
 				<div className="w-full">
 					<Input
-						disabled={isLoading}
+						disabled={isLoading || banned}
 						{...register("message")}
 						className="shadow-xl"
 						type="text"
 						id="chatinput"
 						autoComplete="off"
 						maxLength={125}
-						placeholder="Type something..."
+						placeholder={`${!banned ? "Type something..." : "You have been banned from Chatzy."}`}
 					/>
 					{errors.message?.message && (
 						<p className="my-1 text-[12px] text-red-500">{errors.message?.message as string}</p>
 					)}
 				</div>
 
-				<Button disabled={isLoading}>
+				<Button disabled={isLoading || banned}>
 					<Send width={20} />
 				</Button>
 			</form>

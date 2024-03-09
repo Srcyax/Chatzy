@@ -26,6 +26,7 @@ export default function Dashboard() {
 					return router.push("/login");
 				});
 		},
+		refetchInterval: 5000,
 	});
 
 	if (isLoading) {
@@ -44,7 +45,7 @@ export default function Dashboard() {
 			<main>
 				<div className="m-10 flex gap-12 laptop:flex-row tablet:flex-col smartphone:flex-col">
 					<div className="flex flex-col gap-4 w-full ">
-						<ChatBoard />
+						<ChatBoard role={role} />
 					</div>
 					<div className="shadow-xl border p-4 rounded-md laptop:w-96 tablet:w-full smartphone:w-full">
 						<div className="flex flex-col items-center gap-4 rounded-md p-5">

@@ -27,7 +27,7 @@ export async function GET() {
 			return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 		}
 
-		const { password, ...user } = jwt.decode(token.value) as JwtPayload;
+		const { password, ...user } = validateUser;
 
 		return NextResponse.json({ user });
 	} catch (error) {

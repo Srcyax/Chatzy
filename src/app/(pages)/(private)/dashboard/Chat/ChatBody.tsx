@@ -6,9 +6,13 @@ import { useRouter } from "next/navigation";
 
 type Comments = {
 	id: number;
-	comment: string;
+	text: string;
 	authorId: number;
-	author: string;
+	author: {
+		username: string;
+		role: string;
+		about: string;
+	};
 };
 
 export default function ChatBody({ comments }: { comments: Comments[] | undefined }) {
@@ -23,7 +27,7 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 								<Avatar>
 									<AvatarImage src="" alt="@shadcn" />
 									<AvatarFallback className=" bg-orange-200">
-										{chat.author.charAt(0).toUpperCase()}
+										{chat.author.username.charAt(0).toUpperCase()}
 									</AvatarFallback>
 								</Avatar>
 								<div className="flex flex-col justify-center">
@@ -33,9 +37,11 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 												onClick={() => {
 													router.push(`/user/profile/${chat.authorId}`);
 												}}
-												className="text-[15px] font-medium hover:underline hover:cursor-pointer"
+												className={`text-[15px] font-medium hover:cursor-pointer ${
+													chat.author.role === "banned" ? "line-through" : "hover:underline"
+												}`}
 											>
-												{chat.author}
+												{chat.author.username}
 											</h1>
 										</HoverCardTrigger>
 										<HoverCardContent className="w-60">
@@ -43,18 +49,18 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 												<Avatar>
 													<AvatarImage src="" alt="@shadcn" />
 													<AvatarFallback className="text-[20px] bg-orange-200">
-														{chat.author.charAt(0)}
+														{chat.author.username.charAt(0)}
 													</AvatarFallback>
 												</Avatar>
 												<div className="overflow-hidden h-14">
-													<h1 className="text-[15px] font-medium">{chat.author}</h1>
-													<p className="truncate">{chat.author}</p>
+													<h1 className="text-[15px] font-medium">{chat.author.username}</h1>
+													<p className="truncate">{chat.author.about}</p>
 												</div>
 											</div>
 										</HoverCardContent>
 									</HoverCard>
 
-									<h1 className="text-[13px] text-zinc-700">{chat.comment}</h1>
+									<h1 className="text-[13px] text-zinc-700">{chat.text}</h1>
 								</div>
 							</div>
 						</div>

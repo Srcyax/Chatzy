@@ -13,6 +13,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Ban } from "@/functions/admin/banUser";
 
 export type User = {
 	id: number;
@@ -37,7 +38,7 @@ export const columns: ColumnDef<User>[] = [
 		id: "actions",
 		header: "Actions",
 		cell: ({ row }) => {
-			const payment = row.original;
+			const user = row.original;
 
 			return (
 				<DropdownMenu>
@@ -49,7 +50,7 @@ export const columns: ColumnDef<User>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem>Ban</DropdownMenuItem>
+						<DropdownMenuItem onClick={() => Ban(user.id)}>Ban</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>Edit</DropdownMenuItem>
 					</DropdownMenuContent>
