@@ -19,7 +19,11 @@ export async function POST(req: NextRequest) {
 	}
 
 	try {
-		const user = jwt.decode(token.value) as JwtPayload;
+		const user = jwt.verify(token.value, process.env.JWT_SECRET as string) as JwtPayload;
+
+		if (!user) {
+			return NextResponse.json({ error: "Not allowed" }, { status: 401 });
+		}
 
 		if (!user.id) {
 			return NextResponse.json({ error: "Not allowed" }, { status: 401 });
