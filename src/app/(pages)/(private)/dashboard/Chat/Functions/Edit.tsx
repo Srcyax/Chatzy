@@ -15,6 +15,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 export function EditComment({ id }: { id: number }) {
 	const schema = z.object({
@@ -34,10 +35,17 @@ export function EditComment({ id }: { id: number }) {
 	});
 
 	function handleEdit(data: any) {
-		return axios.post("/api/user/comment/edit", {
-			comment: data.comment,
-			id: id,
-		});
+		toast.promise(
+			axios.post("/api/user/comment/edit", {
+				comment: data.comment,
+				id: id,
+			}),
+			{
+				loading: "Sending modification...",
+				success: "Sent with success",
+				error: "Error when sending",
+			}
+		);
 	}
 
 	return (

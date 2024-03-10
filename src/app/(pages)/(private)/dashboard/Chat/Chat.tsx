@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import ChatBody from "./ChatBody";
+import { toast } from "sonner";
 
 type Comments = {
 	id: number;
@@ -46,6 +47,7 @@ export function ChatBoard({ role }: { role: string | null }) {
 	});
 
 	const [comments, getComments] = useState<Comments[]>();
+	const [submit, setSubmit] = useState<boolean>(false);
 
 	const queryClient = useQueryClient();
 
@@ -65,27 +67,36 @@ export function ChatBoard({ role }: { role: string | null }) {
 	});
 
 	async function PostMessage(data: any) {
-		return axios
-			.post("/api/user/comment", {
-				comment: data.message,
-			})
-			.then(() => {
-				queryClient
-					.fetchQuery({
-						queryKey: ["comments"],
-					})
-					.then(() => {
-						reset();
-						setTimeout(() => {
-							queryClient.fetchQuery({
-								queryKey: ["comments-scroll"],
-							});
-						}, 500);
-					});
-			})
-			.catch(() => {
-				reset();
-			});
+		setSubmit(true);
+		return toast.promise(
+			axios
+				.post("/api/user/comment", {
+					comment: data.message,
+				})
+				.then(() => {
+					queryClient
+						.fetchQuery({
+							queryKey: ["comments"],
+						})
+						.then(() => {
+							reset();
+							setTimeout(() => {
+								queryClient.fetchQuery({
+									queryKey: ["comments-scroll"],
+								});
+							}, 500);
+							setSubmit(false);
+						});
+				})
+				.catch(() => {
+					reset();
+				}),
+			{
+				loading: "Sending comment...",
+				success: "Sent with success",
+				error: "Error when sending",
+			}
+		);
 	}
 
 	useMutation({
@@ -116,7 +127,7 @@ export function ChatBoard({ role }: { role: string | null }) {
 					)}
 				</div>
 
-				<Button disabled={isLoading || banned}>
+				<Button disabled={submit || isLoading || banned}>
 					<Send width={20} />
 				</Button>
 			</form>

@@ -20,6 +20,7 @@ export function About({
 	about: string;
 }) {
 	const [edit, setEdit] = useState<boolean>(false);
+	const [submit, setSubmit] = useState<boolean>(false);
 
 	const schema = z.object({
 		about: z
@@ -45,21 +46,29 @@ export function About({
 	const queryClient = useQueryClient();
 
 	async function EditAbout(data: any) {
-		return axios
-			.post("/api/user/profile/about", {
-				about: data.about,
-			})
-			.then((res) => {
-				queryClient.fetchQuery({
-					queryKey: ["user-profile"],
-				});
-				toast(res.data.message);
-				setEdit(false);
-			})
-			.catch((error) => {
-				toast.error(error.response.data.error);
-				setEdit(false);
-			});
+		setSubmit(true);
+		toast.promise(
+			axios
+				.post("/api/user/profile/about", {
+					about: data.about,
+				})
+				.then((res) => {
+					queryClient.fetchQuery({
+						queryKey: ["user-profile"],
+					});
+					setSubmit(false);
+					setEdit(false);
+				})
+				.catch((error) => {
+					setSubmit(false);
+					setEdit(false);
+				}),
+			{
+				loading: "Sending modifications...",
+				success: "Sent with success",
+				error: "Error when sending",
+			}
+		);
 	}
 
 	const { mutate } = useMutation({
@@ -84,15 +93,21 @@ export function About({
 
 						{edit && (
 							<form onSubmit={handleSubmit(EditAbout)}>
-								<Textarea {...register("about")} className="resize-none" defaultValue={about} />
+								<Textarea
+									disabled={submit}
+									{...register("about")}
+									className="resize-none"
+									defaultValue={about}
+								/>
 								{errors.about?.message && (
 									<p className="my-1 text-[12px] text-red-500">{errors.about?.message as string}</p>
 								)}
 								<div className="flex gap-4 my-4">
-									<Button type="submit">
+									<Button disabled={submit} type="submit">
 										<ArrowUpRight />
 									</Button>
 									<Button
+										disabled={submit}
 										onClick={() => {
 											setEdit(false);
 											reset();

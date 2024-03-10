@@ -102,7 +102,7 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 										{id === chat.authorId && (
 											<div className="flex gap-1 invisible group-hover:visible">
 												<EditComment id={chat.id} />
-												<DeleteComment />
+												<DeleteComment id={chat.id} />
 											</div>
 										)}
 									</div>
