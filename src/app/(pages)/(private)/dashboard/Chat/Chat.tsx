@@ -54,6 +54,9 @@ export function ChatBoard({ role }: { role: string | null }) {
 		queryFn: async () => {
 			await axios.get("/api/user/comment").then((res) => {
 				getComments(res.data.comments);
+				queryClient.fetchQuery({
+					queryKey: ["comments-scroll"],
+				});
 			});
 
 			return "";
@@ -73,6 +76,11 @@ export function ChatBoard({ role }: { role: string | null }) {
 					})
 					.then(() => {
 						reset();
+						setTimeout(() => {
+							queryClient.fetchQuery({
+								queryKey: ["comments-scroll"],
+							});
+						}, 500);
 					});
 			})
 			.catch((error) => {

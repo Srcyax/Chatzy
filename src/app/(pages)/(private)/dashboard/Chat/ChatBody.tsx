@@ -2,7 +2,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 type Comments = {
 	id: number;
@@ -17,8 +19,30 @@ type Comments = {
 
 export default function ChatBody({ comments }: { comments: Comments[] | undefined }) {
 	const router = useRouter();
+
+	const scrollRef = useRef<HTMLDivElement>(null);
+
+	useQuery({
+		queryKey: ["comments-scroll"],
+		queryFn: async () => {
+			const scrollArea = scrollRef.current;
+			if (scrollArea) {
+				const scrollInterval = setInterval(() => {
+					scrollArea.scrollTop += 5;
+					if (scrollArea.scrollTop + scrollArea.clientHeight === scrollArea.scrollHeight) {
+						clearInterval(scrollInterval);
+					}
+				}, 1);
+
+				return () => clearInterval(scrollInterval);
+			}
+
+			return "";
+		},
+	});
+
 	return (
-		<ScrollArea className="h-72 rounded-md border shadow-inner">
+		<div ref={scrollRef} className="h-72 rounded-md border shadow-inner overflow-auto">
 			<div className="p-4">
 				{comments ? (
 					comments?.map((chat, index) => (
@@ -75,6 +99,6 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 					</div>
 				)}
 			</div>
-		</ScrollArea>
+		</div>
 	);
 }
