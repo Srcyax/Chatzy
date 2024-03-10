@@ -3,8 +3,12 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { EditComment } from "./Functions/Edit";
+import { DeleteComment } from "./Functions/Delete";
 
 type Comments = {
 	id: number;
@@ -15,11 +19,12 @@ type Comments = {
 		role: string;
 		about: string;
 	};
+	edited: boolean;
 };
 
 export default function ChatBody({ comments }: { comments: Comments[] | undefined }) {
 	const router = useRouter();
-
+	const [id, setId] = useState<number | null>(-1);
 	const scrollRef = useRef<HTMLDivElement>(null);
 
 	useQuery({
@@ -41,6 +46,10 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 		},
 	});
 
+	useEffect(() => {
+		axios.get("/api/user/auth").then((res) => setId(res.data.user.id));
+	}, []);
+
 	return (
 		<div ref={scrollRef} className="h-72 rounded-md border shadow-inner overflow-auto">
 			<div className="p-4">
@@ -57,16 +66,19 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 								<div className="flex flex-col justify-center">
 									<HoverCard>
 										<HoverCardTrigger asChild>
-											<h1
-												onClick={() => {
-													router.push(`/user/profile/${chat.authorId}`);
-												}}
-												className={`text-[15px] font-medium hover:cursor-pointer ${
-													chat.author.role === "banned" ? "line-through" : "hover:underline"
-												}`}
-											>
-												{chat.author.username}
-											</h1>
+											<div className="flex gap-1 items-center">
+												<h1
+													onClick={() => {
+														router.push(`/user/profile/${chat.authorId}`);
+													}}
+													className={`text-[15px] font-medium hover:cursor-pointer ${
+														chat.author.role === "banned" ? "line-through" : "hover:underline"
+													}`}
+												>
+													{chat.author.username}
+												</h1>
+												{chat.edited ? <h1 className="text-[10px] italic">edited</h1> : null}
+											</div>
 										</HoverCardTrigger>
 										<HoverCardContent className="w-60">
 											<div className="flex items-center space-x-4">
@@ -83,8 +95,17 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 											</div>
 										</HoverCardContent>
 									</HoverCard>
-
-									<h1 className="text-[13px] text-zinc-700">{chat.text}</h1>
+									<div className="group flex gap-2 items-center">
+										<div>
+											<h1 className="text-[13px] text-zinc-700">{chat.text}</h1>
+										</div>
+										{id === chat.authorId && (
+											<div className="flex gap-1 invisible group-hover:visible">
+												<EditComment id={chat.id} />
+												<DeleteComment />
+											</div>
+										)}
+									</div>
 								</div>
 							</div>
 						</div>

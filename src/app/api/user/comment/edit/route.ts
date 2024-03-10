@@ -6,7 +6,7 @@ import { ValidateInput } from "@/functions/user/validateInput";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
-	const { comment } = body;
+	const { comment, id } = body;
 
 	const token = cookies().get("token");
 
@@ -39,28 +39,23 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ error: "You are banned!" }, { status: 403 });
 		}
 
-		const comments = await prisma.comment.findMany();
+		const validateComment = await prisma.comment.findUnique({
+			where: {
+				id: id,
+			},
+		});
 
-		if (comments.length > 25) {
-			await prisma.comment.delete({
-				where: {
-					id: comments.at(0)?.id,
-					text: comments.at(0)?.text,
-				},
-			});
+		if (validateComment?.authorId !== userValidate.id) {
+			return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 		}
 
-		await prisma.comment.create({
+		await prisma.comment.update({
+			where: {
+				id: id,
+			},
 			data: {
 				text: comment,
-				author: {
-					connect: {
-						id: user.id,
-					},
-				},
-			},
-			include: {
-				author: true,
+				edited: true,
 			},
 		});
 
@@ -70,44 +65,5 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({ error: error }, { status: 500 });
 	} finally {
 		await prisma.$disconnect();
-	}
-}
-
-export async function GET() {
-	try {
-		const comments = await prisma.comment.findMany({
-			include: {
-				author: {
-					select: {
-						username: true,
-						role: true,
-						about: true,
-					},
-				},
-			},
-			orderBy: {
-				id: "asc",
-			},
-		});
-
-		comments.forEach(async (validComment) => {
-			const validUser = await prisma.user.findUnique({
-				where: {
-					id: validComment.authorId,
-				},
-			});
-
-			if (!validUser) {
-				await prisma.comment.delete({
-					where: {
-						id: validComment.id,
-					},
-				});
-			}
-		});
-
-		return NextResponse.json({ comments });
-	} catch (error) {
-		return NextResponse.json({ error: error }, { status: 500 });
 	}
 }

@@ -20,6 +20,7 @@ type Comments = {
 		role: string;
 		about: string;
 	};
+	edited: boolean;
 };
 
 export function ChatBoard({ role }: { role: string | null }) {

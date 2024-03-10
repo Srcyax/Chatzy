@@ -33,6 +33,7 @@ model Comment {
   text        String   
   author      User      @relation(fields: [authorId], references: [id])
   authorId    Int
+  edited      Boolean   @default(false)
 }
 
 enum Role {

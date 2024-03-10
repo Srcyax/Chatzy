@@ -1,16 +1,9 @@
 "use client";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ChatBoard } from "./Chat/Chat";
-import Link from "next/link";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { useEffect, useState } from "react";
 import { ActiveUsers } from "./activeUsers";
-import { Button } from "@/components/ui/button";
 import Header from "@/app/header";
 
 export default function Dashboard() {
