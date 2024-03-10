@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ error: "Not allowed" }, { status: 500 });
 		}
 
-		const banUser = await prisma.user.update({
+		await prisma.user.update({
 			where: {
 				id: body.id,
 			},
@@ -41,8 +41,6 @@ export async function POST(req: NextRequest) {
 				role: "banned",
 			},
 		});
-
-		console.log(banUser);
 
 		return NextResponse.json({});
 	} catch (error) {
