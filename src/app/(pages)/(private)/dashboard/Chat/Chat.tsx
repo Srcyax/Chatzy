@@ -47,9 +47,8 @@ export function ChatBoard({ role }: { role: string | null }) {
 	const [comments, getComments] = useState<Comments[]>();
 
 	const queryClient = useQueryClient();
-	const router = useRouter();
 
-	const { data, isError, isLoading, isRefetching } = useQuery({
+	const { isLoading } = useQuery({
 		queryKey: ["comments"],
 		queryFn: async () => {
 			await axios.get("/api/user/comment").then((res) => {
@@ -69,7 +68,7 @@ export function ChatBoard({ role }: { role: string | null }) {
 			.post("/api/user/comment", {
 				comment: data.message,
 			})
-			.then((response) => {
+			.then(() => {
 				queryClient
 					.fetchQuery({
 						queryKey: ["comments"],
@@ -83,12 +82,12 @@ export function ChatBoard({ role }: { role: string | null }) {
 						}, 500);
 					});
 			})
-			.catch((error) => {
+			.catch(() => {
 				reset();
 			});
 	}
 
-	const { mutate } = useMutation({
+	useMutation({
 		mutationKey: ["commentsmutate"],
 		mutationFn: PostMessage,
 	});

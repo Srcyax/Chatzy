@@ -16,7 +16,7 @@ export function ActiveUsers() {
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
-	const { data, isLoading, isError, isFetching } = useQuery({
+	const { isLoading, isFetching } = useQuery({
 		queryKey: ["activeusers"],
 		queryFn: async () => {
 			await axios.post("/api/ping").then(() => {
@@ -30,7 +30,7 @@ export function ActiveUsers() {
 	async function UpdateUsers() {
 		await axios
 			.post("/api/ping/update")
-			.then((response) => {
+			.then(() => {
 				queryClient.fetchQuery({
 					queryKey: ["activeusers"],
 				});
@@ -48,7 +48,7 @@ export function ActiveUsers() {
 		return () => clearInterval(intervalId);
 	}, [isLoading, isFetching]);
 
-	const { mutate } = useMutation({
+	useMutation({
 		mutationKey: ["updateactiveusers"],
 		mutationFn: UpdateUsers,
 	});

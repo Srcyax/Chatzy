@@ -8,7 +8,7 @@ import { DataTable } from "./data-table";
 export default function ListAllUsers() {
 	const [users, getUsers] = useState<User[]>([]);
 
-	const { data, isLoading, isError, isFetching } = useQuery({
+	useQuery({
 		queryKey: ["list-users"],
 		queryFn: async () => {
 			await axios.get("/api/admin/users/listall").then((res) => {
