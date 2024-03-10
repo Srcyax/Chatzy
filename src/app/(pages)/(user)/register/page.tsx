@@ -44,17 +44,23 @@ export default function Home() {
 	const router = useRouter();
 
 	function onSubmit(data: any) {
-		axios
-			.post("api/user/register", {
-				username: data.username,
-				password: data.password,
-			})
-			.then(() => {
-				router.push("/dashboard");
-			})
-			.catch((error) => {
-				toast.error(error.response.data.error);
-			});
+		return toast.promise(
+			axios
+				.post("api/user/register", {
+					username: data.username,
+					password: data.password,
+				})
+				.then(() => {
+					router.push("/dashboard");
+				})
+				.catch((error) => {
+					toast.error(error.response.data.error);
+				}),
+			{
+				loading: "Registering...",
+				error: "Error when registering",
+			}
+		);
 	}
 
 	return (

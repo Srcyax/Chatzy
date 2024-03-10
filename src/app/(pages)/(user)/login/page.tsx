@@ -44,19 +44,23 @@ export default function Home() {
 	const router = useRouter();
 
 	function onSubmit(data: any) {
-		const validatedData = schema.parse(data);
-
-		axios
-			.post("api/user/login", {
-				username: validatedData.username,
-				password: validatedData.password,
-			})
-			.then(() => {
-				router.push("/dashboard");
-			})
-			.catch((error) => {
-				toast.error(error.response.data.error);
-			});
+		return toast.promise(
+			axios
+				.post("api/user/login", {
+					username: data.username,
+					password: data.password,
+				})
+				.then(() => {
+					router.push("/dashboard");
+				})
+				.catch((error) => {
+					toast.error(error.response.data.error);
+				}),
+			{
+				loading: "Logging in...",
+				error: "Error when logging in",
+			}
+		);
 	}
 
 	return (

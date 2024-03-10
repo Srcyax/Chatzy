@@ -37,16 +37,15 @@ export default function Dashboard() {
 			<Header username={username} role={role} />
 			<main>
 				<div className="m-10 flex gap-12 laptop:flex-row tablet:flex-col smartphone:flex-col">
-					<div className="flex flex-col gap-4 w-full ">
-						<ChatBoard role={role} />
+					<ChatBoard role={role} />
+					<ActiveUsers />
+				</div>
+				<div className="m-10 flex gap-12 laptop:flex-row tablet:flex-col smartphone:flex-col">
+					<div className="w-full h-96 p-5 border shadow-lg rounded-md">
+						<h1>Hello</h1>
 					</div>
-					<div className="shadow-xl border p-4 rounded-md laptop:w-96 tablet:w-full smartphone:w-full">
-						<div className="flex flex-col items-center gap-4 rounded-md p-5">
-							<h1 className="text-center">
-								<strong className="text-green-400">Online</strong>
-							</h1>
-							<ActiveUsers />
-						</div>
+					<div className="laptop:w-96 tablet:w-full smartphone:w-full p-5 border shadow-lg rounded-md">
+						<h1>Hello</h1>
 					</div>
 				</div>
 			</main>

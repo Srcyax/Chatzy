@@ -107,7 +107,7 @@ export function ChatBoard({ role }: { role: string | null }) {
 	const banned = role === "banned";
 
 	return (
-		<>
+		<div className="flex flex-col gap-4 w-full ">
 			<ChatBody comments={comments} />
 
 			<form className="flex gap-4" onSubmit={handleSubmit(PostMessage)} action="">
@@ -131,6 +131,6 @@ export function ChatBoard({ role }: { role: string | null }) {
 					<Send width={20} />
 				</Button>
 			</form>
-		</>
+		</div>
 	);
 }

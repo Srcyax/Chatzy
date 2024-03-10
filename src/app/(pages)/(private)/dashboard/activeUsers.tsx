@@ -19,8 +19,10 @@ export function ActiveUsers() {
 	const { isLoading, isFetching } = useQuery({
 		queryKey: ["activeusers"],
 		queryFn: async () => {
-			await axios.post("/api/ping").then(() => {
-				axios.get("/api/ping").then(async (res) => getUsers(res.data.users));
+			await UpdateUsers().then(async () => {
+				await axios.post("/api/ping").then(() => {
+					axios.get("/api/ping").then(async (res) => getUsers(res.data.users));
+				});
 			});
 
 			return "";
@@ -54,24 +56,31 @@ export function ActiveUsers() {
 	});
 
 	return (
-		<div className="grid grid-cols-4 gap-2 p-1 h-56 overflow-y-auto overflow-hidden">
-			{users.length ? (
-				users.map((user, index) => (
-					<div key={index}>
-						<Avatar
-							onClick={() => router.push(`/user/profile/${user.id}`)}
-							className="cursor-pointer shadow-md hover:border border-orange-400"
-						>
-							<AvatarImage src="" alt="@shadcn" />
-							<AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
-						</Avatar>
-					</div>
-				))
-			) : isFetching ? (
-				<div>
-					<Skeleton className="w-10 h-10 rounded-full" />
+		<div className="shadow-xl border p-4 rounded-md laptop:w-96 tablet:w-full smartphone:w-full">
+			<div className="flex flex-col items-center gap-4 rounded-md p-5">
+				<h1 className="text-center">
+					<strong className="text-green-400">Online</strong>
+				</h1>
+				<div className="grid grid-cols-4 gap-2 p-1 h-56 overflow-y-auto overflow-hidden">
+					{users.length ? (
+						users.map((user, index) => (
+							<div key={index}>
+								<Avatar
+									onClick={() => router.push(`/user/profile/${user.id}`)}
+									className="cursor-pointer shadow-md hover:border border-orange-400"
+								>
+									<AvatarImage src="" alt="@shadcn" />
+									<AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
+								</Avatar>
+							</div>
+						))
+					) : isFetching ? (
+						<div>
+							<Skeleton className="w-10 h-10 rounded-full" />
+						</div>
+					) : null}
 				</div>
-			) : null}
+			</div>
 		</div>
 	);
 }
