@@ -63,7 +63,7 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 										{chat.author.username.charAt(0).toUpperCase()}
 									</AvatarFallback>
 								</Avatar>
-								<div className="flex flex-col justify-center">
+								<div className="flex flex-col justify-centerw-96">
 									<HoverCard>
 										<HoverCardTrigger asChild>
 											<div className="flex gap-1 items-center">
@@ -97,7 +97,7 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 									</HoverCard>
 									<div className="group flex gap-2 items-center">
 										<div>
-											<h1 className="text-[13px] text-zinc-700">{chat.text}</h1>
+											<h1 className="text-[13px] text-zinc-700 break-all">{chat.text}</h1>
 										</div>
 										{id === chat.authorId && (
 											<div className="flex gap-1 invisible group-hover:visible">
