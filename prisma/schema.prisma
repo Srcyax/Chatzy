@@ -41,3 +41,18 @@ enum Role {
   administrator
   banned
 }
+
+model Forum {
+  id          Int       @id @default(autoincrement())
+  title       String    @unique
+  description String    
+  thread      Thread[]
+}
+
+model Thread {
+  id          Int       @id @default(autoincrement())
+  title       String    @unique
+  description String    
+  forum      Forum      @relation(fields: [forumId], references: [id])
+  forumId    Int
+}

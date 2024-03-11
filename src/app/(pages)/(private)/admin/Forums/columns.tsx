@@ -13,33 +13,32 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Ban } from "@/functions/admin/users/banUser";
+import { Delete } from "@/functions/admin/forums/deleteForum";
 
-export type User = {
+export type ThreadProps = {
 	id: number;
-	username: string;
-	role: string;
+	title: string;
+	description: string;
 };
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<ThreadProps>[] = [
 	{
 		accessorKey: "id",
 		header: "ID",
 	},
 	{
-		accessorKey: "username",
-		header: "Username",
+		accessorKey: "title",
+		header: "Title",
 	},
 	{
-		accessorKey: "role",
-		header: "Role",
+		accessorKey: "description",
+		header: "Description",
 	},
 	{
 		id: "actions",
 		header: "Actions",
 		cell: ({ row }) => {
-			const user = row.original;
-
+			const forum = row.original;
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
@@ -50,7 +49,7 @@ export const columns: ColumnDef<User>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem onClick={() => Ban(user.id)}>Ban</DropdownMenuItem>
+						<DropdownMenuItem onClick={() => Delete(forum.id)}>Delete</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>Edit</DropdownMenuItem>
 					</DropdownMenuContent>
