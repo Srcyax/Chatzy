@@ -24,6 +24,10 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ error: "Wrong password" }, { status: 500 });
 		}
 
+		if (user.role === "banned") {
+			return NextResponse.json({ error: "You have been banned from Chatzy" }, { status: 500 });
+		}
+
 		await GenerateAuthToken(user);
 
 		return NextResponse.json({ message: "sucess" });
