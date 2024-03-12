@@ -53,6 +53,7 @@ model Thread {
   id          Int       @id @default(autoincrement())
   title       String    @unique
   description String    
-  forum      Forum      @relation(fields: [forumId], references: [id])
-  forumId    Int
+  author      String  
+  forum       Forum      @relation(fields: [forumId], references: [id])
+  forumId     Int
 }

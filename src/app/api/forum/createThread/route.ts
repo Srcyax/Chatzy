@@ -11,7 +11,11 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({ error: "Not allowed" }, { status: 500 });
 	}
 
+	const token = cookies().get("token")?.value as string;
+
 	try {
+		const user = jwt.decode(token) as JwtPayload;
+
 		const forum = await prisma.forum.findUnique({
 			where: {
 				title: body.forum,
@@ -26,6 +30,7 @@ export async function POST(req: NextRequest) {
 			data: {
 				title: body.title,
 				description: body.description,
+				author: user.username,
 				forum: {
 					connect: {
 						id: forum?.id,

@@ -1,16 +1,44 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { title } from "process";
+import { ReactNode, useState } from "react";
 
-type ThreadProps = {
-	icon: ReactNode;
+type ForumProps = {
 	id: number;
 	title: string;
 	description: string;
-	username: string;
+	icon: ReactNode;
 };
 
-export function Thread(thread: ThreadProps) {
+type ThreadProps = {
+	id: number;
+	title: string;
+	description: string;
+	author: string;
+};
+
+export function Thread(thread: ForumProps) {
+	const [lastThread, setLastThread] = useState<ThreadProps>();
+
+	const { data, isLoading } = useQuery({
+		queryKey: ["get-last-thread"],
+		queryFn: async () => {
+			axios
+				.post("/api/forum/listThread/last", {
+					forum: thread.title,
+				})
+				.then((res) => {
+					setLastThread(res.data.lastThread);
+				});
+		},
+	});
+
+	if (isLoading) {
+		return <></>;
+	}
+
 	return (
 		<div className="flex justify-between w-full px-5 py-1">
 			<div className="flex items-center gap-4">
@@ -26,14 +54,15 @@ export function Thread(thread: ThreadProps) {
 					<p className="text-[15px]">{thread.description}</p>
 				</div>
 			</div>
-			<div className="flex gap-4 items-center">
+
+			<div className="flex gap-4 items-center w-32 mx-2">
 				<Avatar className="cursor-pointer hover:border border-orange-400">
 					<AvatarImage src="" alt="@shadcn" />
-					<AvatarFallback>{thread.username.charAt(0).toUpperCase()}</AvatarFallback>
+					<AvatarFallback>{lastThread?.author.charAt(0).toUpperCase()}</AvatarFallback>
 				</Avatar>
-				<div className="flex flex-col">
-					<h1 className="font-semibold">We accept payme...</h1>
-					<p className="text-[15px] text-zinc-600">29 October 2023</p>
+				<div className="flex flex-col w-full">
+					<h1 className="font-semibold w-2/4 truncate">{lastThread?.title}</h1>
+					<p className="text-[15px] text-zinc-600 w-24 truncate">{lastThread?.description}</p>
 				</div>
 			</div>
 		</div>

@@ -55,7 +55,6 @@ export default function Forum() {
 								icon={<NotebookIcon />}
 								title={forum.title}
 								description={forum.description}
-								username="cya"
 							/>
 						))}
 					</>

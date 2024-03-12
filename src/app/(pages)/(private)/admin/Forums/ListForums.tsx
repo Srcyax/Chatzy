@@ -2,18 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 
-import { ThreadProps, columns } from "./columns";
+import { ForumProps, columns } from "./columns";
 import { DataTable } from "./data-table";
 import { CreateForum } from "./CreateForum";
 
 export default function ListForums() {
-	const [users, getUsers] = useState<ThreadProps[]>([]);
+	const [forums, getForums] = useState<ForumProps[]>([]);
 
-	useQuery({
-		queryKey: ["list-users"],
+	const { isLoading, isError } = useQuery({
+		queryKey: ["list-forums"],
 		queryFn: async () => {
 			await axios.get("/api/admin/forums/listForums").then((res) => {
-				getUsers(res.data.forums);
+				getForums(res.data.forums);
 			});
 
 			return "";
@@ -21,10 +21,14 @@ export default function ListForums() {
 		refetchInterval: 5000,
 	});
 
+	if (isLoading) {
+		return <></>;
+	}
+
 	return (
 		<div className="container mx-auto h-96">
 			<CreateForum />
-			<DataTable columns={columns} data={users} />
+			<DataTable columns={columns} data={forums} />
 		</div>
 	);
 }

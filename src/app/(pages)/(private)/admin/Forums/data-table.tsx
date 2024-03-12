@@ -126,7 +126,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 					variant="outline"
 					size="sm"
 					onClick={() => setCurrentPage((currentPage) => Math.min(currentPage + 1, pages.length - 1))}
-					disabled={currentPage === pages.length - 1}
+					disabled={currentPage === pages.length - 1 || table.getRowModel().rows?.length <= 0}
 				>
 					Next
 				</Button>

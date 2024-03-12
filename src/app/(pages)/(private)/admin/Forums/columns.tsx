@@ -13,15 +13,17 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Delete } from "@/functions/admin/forums/deleteForum";
+import { toast } from "sonner";
+import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
-export type ThreadProps = {
+export type ForumProps = {
 	id: number;
 	title: string;
 	description: string;
 };
 
-export const columns: ColumnDef<ThreadProps>[] = [
+export const columns: ColumnDef<ForumProps>[] = [
 	{
 		accessorKey: "id",
 		header: "ID",
@@ -49,7 +51,24 @@ export const columns: ColumnDef<ThreadProps>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem onClick={() => Delete(forum.id)}>Delete</DropdownMenuItem>
+						<DropdownMenuItem
+							onClick={() => {
+								return toast.promise(
+									axios
+										.post("/api/admin/forums/delete", {
+											id: forum.id,
+										})
+										.then((res) => {}),
+									{
+										loading: "Deleting...",
+										success: "Deleted successfully",
+										error: "Error when deleting",
+									}
+								);
+							}}
+						>
+							Delete
+						</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>Edit</DropdownMenuItem>
 					</DropdownMenuContent>

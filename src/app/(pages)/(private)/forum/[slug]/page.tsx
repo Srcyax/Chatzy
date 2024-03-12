@@ -62,7 +62,7 @@ export default function Page({ params }: any) {
 					</>
 				) : (
 					<>
-						{threads?.map((thread, index) => (
+						{threads?.toReversed().map((thread, index) => (
 							<Link
 								key={index}
 								className="hover:border border-orange-400 rounded-lg"
