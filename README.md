@@ -1,6 +1,6 @@
 # Chatzy - Seu Destino Definitivo para Conversas 📱
 
-Este repositório contém o código-fonte do Chatzy, um aplicativo de chat para suas necessidades de comunicação.
+Este repositório contém o código-fonte do Chatzy, um forum de chat e comunicação.
 
 ## Como Executar o Projeto
 
