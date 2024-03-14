@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
 
 		return NextResponse.json({ userProfile, isOwner: user.id === id });
 	} catch (error) {
-		console.log(error);
 		return NextResponse.json({ error: error }, { status: 500 });
 	}
 }

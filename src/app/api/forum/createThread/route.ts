@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ error: "Forum not found" }, { status: 404 });
 		}
 
-		await prisma.thread.create({
+		const thread = await prisma.thread.create({
 			data: {
 				title: body.title,
 				description: body.description,
@@ -42,8 +42,9 @@ export async function POST(req: NextRequest) {
 			},
 		});
 
-		return NextResponse.json({});
+		return NextResponse.json({ thread });
 	} catch (error) {
+		console.log(error);
 		return NextResponse.json({ error: error }, { status: 500 });
 	}
 }
