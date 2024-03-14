@@ -59,7 +59,7 @@ export default function Page({ params }: any) {
 				</div>
 				<div className="flex laptop:flex-row tablet:flex-col smartphone:flex-col gap-2 smartphone:gap-4 w-full">
 					<div className="flex flex-col gap-2 items-center justify-start border-2 shadow-3xl px-16 py-5 h-64 rounded-md">
-						{isLoading ? (
+						{isLoading || !user ? (
 							<Skeleton className="w-20 h-20 rounded-full" />
 						) : (
 							<Avatar className="shadow-xl w-20 h-20">

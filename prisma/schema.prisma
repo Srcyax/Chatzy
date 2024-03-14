@@ -56,4 +56,13 @@ model Thread {
   author      String  
   forum       Forum      @relation(fields: [forumId], references: [id])
   forumId     Int
+  threadComments ThreadComment[]
+}
+
+model ThreadComment {
+  id          Int       @id @default(autoincrement())
+  text        String    
+  author      String  
+  thread      Thread      @relation(fields: [threadId], references: [id])
+  threadId    Int
 }
