@@ -1,8 +1,10 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Undo2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -45,6 +47,16 @@ export default function Page({ params }: any) {
 	return (
 		<div>
 			<main className="m-16 flex flex-col gap-5">
+				<div>
+					<Button
+						className="h-9"
+						onClick={() => {
+							router.back();
+						}}
+					>
+						<Undo2 />
+					</Button>
+				</div>
 				<div className="flex laptop:flex-row tablet:flex-col smartphone:flex-col gap-2 smartphone:gap-4 w-full">
 					<div className="flex flex-col gap-2 items-center justify-start border-2 shadow-3xl px-16 py-5 h-64 rounded-md">
 						{isLoading ? (
