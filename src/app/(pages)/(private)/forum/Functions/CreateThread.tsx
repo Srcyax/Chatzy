@@ -53,10 +53,11 @@ export function CreateThread({ forum }: { forum: string }) {
 		queryKey: ["get-owner-thread-profile"],
 		queryFn: async () => {
 			return axios
-				.get("/api/forum/createThread/profile")
+				.get("/api/user/profile")
 				.then((res) => res.data)
-				.catch(() => {
-					return router.push("/dashboard");
+				.catch((error) => {
+					console.log(error);
+					//return router.push("/dashboard");
 				});
 		},
 	});

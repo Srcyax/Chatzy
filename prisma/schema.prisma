@@ -64,5 +64,5 @@ model ThreadComment {
   text        String    
   author      String  
   thread      Thread      @relation(fields: [threadId], references: [id])
-  threadId    Int
+  threadId    Int     
 }

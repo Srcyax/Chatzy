@@ -1,30 +1,23 @@
-import { prisma } from "@/functions/prisma";
+import { ValidUser } from "@/functions/validUser";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { prisma } from "@/functions/prisma";
 
-export async function POST(req: NextRequest) {
-	const body = await req.json();
-
-	const { id } = body;
-
-	try {
-		const userProfile = await prisma.user.findUnique({
-			where: {
-				id: id,
-			},
-		});
-
-		const token = cookies().get("token");
-
-		if (!token) {
-			return NextResponse.json({ userProfile, isLocalUser: false });
-		}
-
-		const user = jwt.verify(token.value, process.env.JWT_SECRET as string) as JwtPayload;
-
-		return NextResponse.json({ userProfile, isOwner: user.id === id });
-	} catch (error) {
-		return NextResponse.json({ error: error }, { status: 500 });
+export async function GET() {
+	if (!ValidUser()) {
+		return NextResponse.json({ error: "Not allowed" }, { status: 500 });
 	}
+
+	const token = cookies().get("token")?.value as string;
+	const { id } = jwt.decode(token) as JwtPayload;
+	console.log();
+
+	const userProfile = await prisma.user.findUnique({
+		where: {
+			id: id,
+		},
+	});
+
+	return NextResponse.json({ userProfile });
 }

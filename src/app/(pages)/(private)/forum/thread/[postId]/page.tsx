@@ -1,12 +1,14 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Undo2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Comment } from "./Components/Comments";
 
 type User = {
 	id: number;
@@ -24,23 +26,30 @@ export default function Page({ params }: any) {
 	const router = useRouter();
 	const [user, getUser] = useState<User>();
 	const [thread, getThread] = useState<Thread>();
+
 	const { data, isLoading } = useQuery({
 		queryKey: ["get-thread"],
 		queryFn: async () => {
-			return axios
+			await axios
 				.post("/api/forum/thread", {
 					id: parseInt(params.postId),
 				})
 				.then((res) => {
 					getThread(res.data.thread);
 					axios
-						.get("/api/forum/createThread/profile")
-						.then((res) => getUser(res.data.userProfile))
+						.post("/api/forum/createThread/profile", {
+							threadId: parseInt(params.postId),
+						})
+						.then((res) => {
+							getUser(res.data.userProfile);
+						})
 						.catch(() => {
 							return router.push("/dashboard");
 						});
 				})
 				.catch(() => router.push("/dashboard"));
+
+			return "";
 		},
 	});
 
@@ -102,6 +111,7 @@ export default function Page({ params }: any) {
 						</div>
 					</div>
 				</div>
+				<Comment id={parseInt(params.postId)} />
 			</main>
 		</div>
 	);
