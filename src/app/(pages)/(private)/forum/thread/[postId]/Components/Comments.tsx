@@ -116,7 +116,7 @@ export function Comment({ id }: { id: number }) {
 				) : (
 					<></>
 				)}
-				{comments?.map((comment, index) => (
+				{comments?.toReversed().map((comment, index) => (
 					<div key={index} className="border p-5 rounded-lg shadow-lg">
 						<div className="flex gap-4 items-center">
 							<Avatar className="shadow-xl w-16 h-16">

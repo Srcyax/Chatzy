@@ -56,7 +56,7 @@ export function CreateThread({ forum }: { forum: string }) {
 		queryKey: ["get-owner-thread-profile"],
 		queryFn: async () => {
 			return axios
-				.get("/api/user/profile")
+				.get("/api/forum/createThread/profile")
 				.then((res) => res.data)
 				.catch((error) => {
 					console.log(error);
@@ -166,7 +166,7 @@ export function CreateThread({ forum }: { forum: string }) {
 											)}
 										</div>
 									</div>
-									<Button disabled={submit} type="submit">
+									<Button disabled={submit || isLoading} type="submit">
 										Create
 									</Button>
 								</form>

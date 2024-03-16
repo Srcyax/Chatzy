@@ -37,7 +37,7 @@ export default function Page({ params }: any) {
 				.then((res) => {
 					getThread(res.data.thread);
 					axios
-						.post("/api/forum/createThread/profile", {
+						.post("/api/forum/thread/profile", {
 							threadId: parseInt(params.postId),
 						})
 						.then((res) => {
