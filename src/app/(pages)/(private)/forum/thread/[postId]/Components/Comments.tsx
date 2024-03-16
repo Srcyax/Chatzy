@@ -4,11 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Send } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 type ThreadComment = {
@@ -19,6 +20,8 @@ type ThreadComment = {
 
 export function Comment({ id }: { id: number }) {
 	const [comments, getThreadComments] = useState<ThreadComment[]>();
+	const [submit, setSubmit] = useState<boolean>(false);
+	const queryClient = useQueryClient();
 
 	const schema = z.object({
 		text: z
@@ -57,25 +60,47 @@ export function Comment({ id }: { id: number }) {
 	});
 
 	function handleComment(data: any) {
-		axios
-			.post("/api/forum/thread/comments", {
-				threadId: id,
-				text: data.text,
-			})
-			.then(() => reset());
+		setSubmit(true);
+
+		return toast.promise(
+			axios
+				.post("/api/forum/thread/comments", {
+					threadId: id,
+					text: data.text,
+				})
+				.then(() => {
+					queryClient.fetchQuery({ queryKey: ["get-thread-comments"] });
+					setSubmit(false);
+					reset();
+				})
+				.catch((error) => {
+					setSubmit(false);
+					reset();
+				}),
+			{
+				loading: "Sending comment...",
+				success: "Sent with success",
+				error: "Error when sending",
+			}
+		);
 	}
 
 	return (
 		<>
 			<form onSubmit={handleSubmit(handleComment)} action="" className="flex gap-4">
 				<div className="w-full h-full">
-					<Input {...register("text")} className="resize-none" placeholder="Comment something..." />
+					<Input
+						{...register("text")}
+						disabled={submit}
+						className="resize-none"
+						placeholder="Comment something..."
+					/>
 					{errors.text?.message && (
 						<p className="my-1 text-[12px] text-red-500">{errors.text?.message as string}</p>
 					)}
 				</div>
 
-				<Button>
+				<Button disabled={submit}>
 					<Send width={20} />
 				</Button>
 			</form>

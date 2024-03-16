@@ -19,9 +19,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { BadgePlus } from "lucide-react";
+import { BadgePlus, Undo2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 export function CreateThread({ forum }: { forum: string }) {
@@ -48,6 +50,7 @@ export function CreateThread({ forum }: { forum: string }) {
 
 	const queryClient = useQueryClient();
 	const router = useRouter();
+	const [submit, setSubmit] = useState<boolean>(false);
 
 	const { data, isLoading } = useQuery({
 		queryKey: ["get-owner-thread-profile"],
@@ -62,22 +65,34 @@ export function CreateThread({ forum }: { forum: string }) {
 		},
 	});
 
-	function handleCreateThread(data: any) {
-		return axios
-			.post("/api/forum/createThread", {
-				forum: forum,
-				title: data.title,
-				description: data.description,
-			})
-			.then((res) => {
-				queryClient
-					.fetchQuery({
-						queryKey: [`list-${forum}-threads`],
-					})
-					.then(() => {
-						router.push(`/forum/thread/${res.data.thread.id}`);
-					});
-			});
+	async function handleCreateThread(data: any) {
+		setSubmit(true);
+		return toast.promise(
+			axios
+				.post("/api/forum/createThread", {
+					forum: forum,
+					title: data.title,
+					description: data.description,
+				})
+				.then((res) => {
+					queryClient
+						.fetchQuery({
+							queryKey: [`list-${forum}-threads`],
+						})
+						.then(() => {
+							router.push(`/forum/thread/${res.data.thread.id}`);
+						});
+					setSubmit(false);
+				})
+				.catch(() => {
+					setSubmit(false);
+				}),
+			{
+				loading: "Creating thread...",
+				success: "Successfully created",
+				error: "Error when creating",
+			}
+		);
 	}
 
 	useMutation({
@@ -88,6 +103,16 @@ export function CreateThread({ forum }: { forum: string }) {
 	return (
 		<div>
 			<main className="m-16 flex flex-col gap-5">
+				<div>
+					<Button
+						className="h-9"
+						onClick={() => {
+							router.back();
+						}}
+					>
+						<Undo2 />
+					</Button>
+				</div>
 				<div className="flex laptop:flex-row tablet:flex-col smartphone:flex-col gap-2 smartphone:gap-4 w-full">
 					<div className="flex flex-col gap-2 items-center justify-start border-2 shadow-3xl px-16 py-5 rounded-md">
 						{isLoading ? (
@@ -123,7 +148,7 @@ export function CreateThread({ forum }: { forum: string }) {
 								<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleCreateThread)} action="">
 									<div className="flex flex-col gap-4">
 										<div>
-											<Input {...register("title")} placeholder="Title" />
+											<Input {...register("title")} disabled={submit} placeholder="Title" />
 											{errors.title?.message && (
 												<p className="my-1 text-[12px] text-red-500">{errors.title?.message as string}</p>
 											)}
@@ -131,6 +156,7 @@ export function CreateThread({ forum }: { forum: string }) {
 
 										<div>
 											<Textarea
+												disabled={submit}
 												className="h-28 resize-none"
 												{...register("description")}
 												placeholder="Description"
@@ -140,7 +166,9 @@ export function CreateThread({ forum }: { forum: string }) {
 											)}
 										</div>
 									</div>
-									<Button type="submit">Create</Button>
+									<Button disabled={submit} type="submit">
+										Create
+									</Button>
 								</form>
 							</div>
 						</div>
