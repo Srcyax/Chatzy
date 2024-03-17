@@ -3,6 +3,17 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuShortcut,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import axios from "axios";
+
 type User = {
 	username: string;
 	role: string | null;
@@ -26,10 +37,27 @@ export default function Header({ username, role }: { username: string; role: str
 						Admin
 					</Button>
 				)}
-				<Avatar>
-					<AvatarImage src="" alt="@shadcn" />
-					<AvatarFallback>{username.charAt(0).toUpperCase()}</AvatarFallback>
-				</Avatar>
+				<DropdownMenu>
+					<DropdownMenuTrigger>
+						<Avatar>
+							<AvatarImage src="" alt="@shadcn" />
+							<AvatarFallback>{username.charAt(0).toUpperCase()}</AvatarFallback>
+						</Avatar>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuLabel>My Account</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem>Profile</DropdownMenuItem>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem
+							onClick={() => {
+								axios.get("/api/user/logout").then(() => location.reload());
+							}}
+						>
+							Log out
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</div>
 		</header>
 	);

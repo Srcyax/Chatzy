@@ -91,7 +91,7 @@ export function Comment({ id }: { id: number }) {
 				<div className="w-full h-full">
 					<Input
 						{...register("text")}
-						disabled={submit}
+						disabled={submit || isLoading}
 						className="resize-none"
 						placeholder="Comment something..."
 					/>
@@ -100,7 +100,7 @@ export function Comment({ id }: { id: number }) {
 					)}
 				</div>
 
-				<Button disabled={submit}>
+				<Button disabled={submit || isLoading}>
 					<Send width={20} />
 				</Button>
 			</form>

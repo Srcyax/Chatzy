@@ -5,10 +5,6 @@ import { useRouter } from "next/navigation";
 import { ChatBoard } from "./Chat/Chat";
 import { ActiveUsers } from "./Forum/activeUsers";
 import Header from "@/app/header";
-import { NotebookIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Thread } from "./Forum/Thread";
-import { useState } from "react";
 import Forum from "./Forum/Forum";
 
 export default function Dashboard() {

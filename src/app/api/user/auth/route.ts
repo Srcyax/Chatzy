@@ -21,6 +21,9 @@ export async function GET() {
 			where: {
 				id: validateToken.id,
 			},
+			include: {
+				friends: true,
+			},
 		});
 
 		if (!validateUser) {

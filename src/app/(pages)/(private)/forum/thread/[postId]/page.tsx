@@ -80,6 +80,7 @@ export default function Page({ params }: any) {
 							{isLoading ? (
 								<div className="flex flex-col gap-2 items-center">
 									<Skeleton className="w-16 h-4" />
+									<Skeleton className="w-28 h-6" />
 									<Skeleton className="w-5 h-4" />
 								</div>
 							) : (
