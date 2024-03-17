@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export function EditComment({ id }: { id: number }) {
 	const schema = z.object({
@@ -29,6 +30,7 @@ export function EditComment({ id }: { id: number }) {
 	const {
 		register,
 		handleSubmit,
+		reset,
 		formState: { errors },
 	} = useForm({
 		resolver: zodResolver(schema),
@@ -36,10 +38,14 @@ export function EditComment({ id }: { id: number }) {
 
 	function handleEdit(data: any) {
 		toast.promise(
-			axios.post("/api/user/comment/edit", {
-				comment: data.comment,
-				id: id,
-			}),
+			axios
+				.post("/api/user/comment/edit", {
+					comment: data.comment,
+					id: id,
+				})
+				.then(() => {
+					reset();
+				}),
 			{
 				loading: "Sending modification...",
 				success: "Sent with success",
@@ -67,7 +73,7 @@ export function EditComment({ id }: { id: number }) {
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel type="reset">Cancel</AlertDialogCancel>
-							<AlertDialogAction type="submit">Continue</AlertDialogAction>
+							<Button type="submit">Continue</Button>
 						</AlertDialogFooter>
 					</form>
 				</AlertDialogContent>

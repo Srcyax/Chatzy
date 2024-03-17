@@ -19,6 +19,7 @@ export default function Forum() {
 		queryFn: async () => {
 			return axios.get("/api/admin/forums/listForums").then((res) => getForums(res.data.forums));
 		},
+		refetchOnWindowFocus: false,
 	});
 
 	return (
