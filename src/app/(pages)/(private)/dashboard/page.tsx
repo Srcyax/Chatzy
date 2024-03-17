@@ -31,11 +31,11 @@ export default function Dashboard() {
 		return <></>;
 	}
 
-	const { username, role } = data?.user;
+	const { id, username, role } = data?.user;
 
 	return (
 		<div>
-			<Header username={username} role={role} />
+			<Header id={id} username={username} role={role} />
 			<main>
 				<div className="m-10 flex gap-12 laptop:flex-row tablet:flex-col smartphone:flex-col">
 					<ChatBoard role={role} />

@@ -19,7 +19,15 @@ type User = {
 	role: string | null;
 };
 
-export default function Header({ username, role }: { username: string; role: string | null }) {
+export default function Header({
+	id,
+	username,
+	role,
+}: {
+	id: number;
+	username: string;
+	role: string | null;
+}) {
 	const router = useRouter();
 
 	return (
@@ -47,7 +55,13 @@ export default function Header({ username, role }: { username: string; role: str
 					<DropdownMenuContent>
 						<DropdownMenuLabel>My Account</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>Profile</DropdownMenuItem>
+						<DropdownMenuItem
+							onClick={() => {
+								router.push(`/user/profile/${id}`);
+							}}
+						>
+							Profile
+						</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							onClick={() => {
