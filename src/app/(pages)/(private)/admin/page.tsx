@@ -32,11 +32,11 @@ export default function Admin() {
 		return <></>;
 	}
 
-	const { username, role } = data.user;
+	const { id, username, role } = data.user;
 
 	return (
 		<div>
-			<Header username={username} role={role} />
+			<Header id={id} username={username} role={role} />
 			<main className="m-10 flex gap-4">
 				<div className="shadow-md border rounded-lg w-24 p-4 flex flex-col items-center gap-8">
 					<li
