@@ -80,7 +80,7 @@ export default function Page({ params }: any) {
 													<AvatarFallback>{thread.author.charAt(0).toUpperCase()}</AvatarFallback>
 												</Avatar>
 												<div className="flex flex-col">
-													{thread.title}
+													<h1 className="font-bold text-xl">{thread.title}</h1>
 
 													<p className="text-[15px]">{thread.description}</p>
 												</div>

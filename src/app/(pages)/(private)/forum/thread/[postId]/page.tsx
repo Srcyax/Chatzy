@@ -5,10 +5,22 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Undo2 } from "lucide-react";
+import { Undo2, ShieldAlert, Reply } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Comment } from "./Components/Comments";
+
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type User = {
 	id: number;
@@ -95,19 +107,25 @@ export default function Page({ params }: any) {
 						</div>
 					</div>
 					<div className="flex flex-col gap-2 items-center justify-center w-full border-2 shadow-3xl p-5 rounded-md">
-						<div className="w-full h-full">
-							<div className="flex flex-col gap-2">
-								{isLoading ? (
-									<>
-										<Skeleton className="w-96 smartphone:w-48 h-4" />
-										<Skeleton className="w-72 smartphone:w-40 h-4" />
-									</>
-								) : (
-									<>
-										<h1>{thread?.title}</h1>
-										<p>{thread?.description}</p>
-									</>
-								)}
+						<div className="flex w-full h-full">
+							<div className="flex-1">
+								<div className="flex flex-col gap-2">
+									{isLoading ? (
+										<>
+											<Skeleton className="w-96 smartphone:w-48 h-4" />
+											<Skeleton className="w-72 smartphone:w-40 h-4" />
+										</>
+									) : (
+										<>
+											<h1 className="text-3xl font-bold">{thread?.title}</h1>
+											<p>{thread?.description}</p>
+										</>
+									)}
+								</div>
+							</div>
+							<div className="flex gap-2">
+								<ShieldAlert width={20} />
+								<Reply width={20} />
 							</div>
 						</div>
 					</div>
