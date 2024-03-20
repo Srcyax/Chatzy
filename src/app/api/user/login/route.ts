@@ -3,6 +3,7 @@ import { prisma } from "@/functions/prisma";
 import bcrypt from "bcrypt";
 import { GenerateAuthToken } from "@/functions/user/authToken";
 import { checkRateLimit } from "@/functions/RateLimit";
+import { ValidateInput } from "@/functions/user/validateInput";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
@@ -17,6 +18,14 @@ export async function POST(req: NextRequest) {
 	}
 
 	const { username, password } = body;
+
+	if (!ValidateInput(username, 10)) {
+		return NextResponse.json({ error: "Invalid inputs" });
+	}
+
+	if (!ValidateInput(password, 10)) {
+		return NextResponse.json({ error: "Invalid inputs" });
+	}
 
 	try {
 		const user = await prisma.user.findUnique({
