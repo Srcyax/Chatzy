@@ -13,10 +13,6 @@ const limiter = new Ratelimit({
 	limiter: Ratelimit.slidingWindow(5, "10s"),
 });
 
-export const config = {
-	runtime: "edge",
-};
-
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 
