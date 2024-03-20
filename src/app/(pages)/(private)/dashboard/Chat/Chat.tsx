@@ -88,12 +88,13 @@ export function ChatBoard({ role }: { role: string | null }) {
 							setSubmit(false);
 						});
 				})
-				.catch(() => {
+				.catch((error) => {
+					toast.error(error.response.data.error);
+					setSubmit(false);
 					reset();
 				}),
 			{
 				loading: "Sending comment...",
-				success: "Sent with success",
 				error: "Error when sending",
 			}
 		);

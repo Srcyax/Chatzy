@@ -23,7 +23,10 @@ export async function POST(req: NextRequest) {
 	const { comment } = body;
 
 	if (remaining === 0) {
-		return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+		return NextResponse.json(
+			{ error: "Calm down boy! you are making too many requests" },
+			{ status: 429 }
+		);
 	}
 
 	if (!ValidUser()) {
