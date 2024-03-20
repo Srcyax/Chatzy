@@ -5,9 +5,30 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { ValidateInput } from "@/functions/user/validateInput";
 import { ValidUser } from "@/functions/validUser";
 
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const limiter = new Ratelimit({
+	redis: Redis.fromEnv(),
+	limiter: Ratelimit.slidingWindow(5, "10s"),
+});
+
+export const config = {
+	runtime: "edge",
+};
+
 export async function POST(req: NextRequest) {
 	const body = await req.json();
+
+	const ip = req.ip ?? "127.0.0.1";
+
+	const { limit, reset, remaining } = await limiter.limit(ip);
+
 	const { comment } = body;
+
+	if (remaining === 0) {
+		return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+	}
 
 	if (!ValidUser()) {
 		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
