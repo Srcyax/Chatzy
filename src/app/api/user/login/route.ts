@@ -35,13 +35,13 @@ export async function POST(req: NextRequest) {
 		});
 
 		if (!user) {
-			return NextResponse.json({ error: "User not found" }, { status: 404 });
+			return NextResponse.json({ error: "Invalid username or password" }, { status: 404 });
 		}
 
 		const passwordVerify = await bcrypt.compare(password, user?.password as string);
 
 		if (!passwordVerify) {
-			return NextResponse.json({ error: "Wrong password" }, { status: 500 });
+			return NextResponse.json({ error: "Invalid username or password" }, { status: 500 });
 		}
 
 		if (user.role === "banned") {
