@@ -6,10 +6,10 @@ import { ValidateInput } from "@/functions/user/validateInput";
 import { ValidUser } from "@/functions/validUser";
 
 import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+import { kv } from "@vercel/kv";
 
 const limiter = new Ratelimit({
-	redis: Redis.fromEnv(),
+	redis: kv,
 	limiter: Ratelimit.slidingWindow(5, "10s"),
 });
 
