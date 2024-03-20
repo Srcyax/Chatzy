@@ -19,6 +19,7 @@ type Comments = {
 		role: string;
 		about: string;
 	};
+	at: any;
 	edited: boolean;
 };
 
@@ -78,6 +79,7 @@ export default function ChatBody({ comments }: { comments: Comments[] | undefine
 													{chat.author.username}
 												</h1>
 												{chat.edited ? <h1 className="text-[10px] italic">edited</h1> : null}
+												<h1 className="text-[10px] italic">{chat.at}</h1>
 											</div>
 										</HoverCardTrigger>
 										<HoverCardContent className="w-60">

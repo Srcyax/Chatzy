@@ -1,3 +1,4 @@
+import { checkRateLimit } from "@/functions/RateLimit";
 import { prisma } from "@/functions/prisma";
 import { ValidUser } from "@/functions/validUser";
 import { NextRequest, NextResponse } from "next/server";

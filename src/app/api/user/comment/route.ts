@@ -4,30 +4,21 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { ValidateInput } from "@/functions/user/validateInput";
 import { ValidUser } from "@/functions/validUser";
-
-import { Ratelimit } from "@upstash/ratelimit";
-import { kv } from "@vercel/kv";
-
-const limiter = new Ratelimit({
-	redis: kv,
-	limiter: Ratelimit.slidingWindow(5, "10s"),
-});
+import { checkRateLimit } from "@/functions/RateLimit";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 
-	const ip = req.ip ?? "127.0.0.1";
+	const result = await checkRateLimit(req);
 
-	const { limit, reset, remaining } = await limiter.limit(ip);
-
-	const { comment } = body;
-
-	if (remaining === 0) {
+	if (!result) {
 		return NextResponse.json(
 			{ error: "Calm down boy! you are making too many requests" },
 			{ status: 429 }
 		);
 	}
+
+	const { comment } = body;
 
 	if (!ValidUser()) {
 		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
@@ -53,6 +44,8 @@ export async function POST(req: NextRequest) {
 			});
 		}
 
+		const date = new Date();
+
 		await prisma.comment.create({
 			data: {
 				text: comment,
@@ -61,6 +54,17 @@ export async function POST(req: NextRequest) {
 						id: user.id,
 					},
 				},
+				at:
+					date.getMonth() +
+					1 +
+					"/" +
+					date.getDate() +
+					"/" +
+					date.getFullYear() +
+					" at " +
+					date.getHours() +
+					":" +
+					date.getMinutes(),
 			},
 			include: {
 				author: true,

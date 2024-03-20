@@ -3,9 +3,19 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { prisma } from "@/functions/prisma";
+import { checkRateLimit } from "@/functions/RateLimit";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
+
+	const result = await checkRateLimit(req);
+
+	if (!result) {
+		return NextResponse.json(
+			{ error: "Calm down boy! you are making too many requests" },
+			{ status: 429 }
+		);
+	}
 
 	const { threadId, text } = body;
 

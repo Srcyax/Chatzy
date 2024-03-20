@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { differenceInSeconds } from "date-fns";
 import { PrismaClient } from "@prisma/client";
 import { ValidUser } from "@/functions/validUser";
+import { checkRateLimit } from "@/functions/RateLimit";
 
 export async function POST(req: NextRequest) {
 	if (!ValidUser()) {

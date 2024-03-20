@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prisma } from "@/functions/prisma";
 import { ValidUser } from "@/functions/validUser";
+import { checkRateLimit } from "@/functions/RateLimit";
 
 export async function POST(req: NextRequest) {
 	if (!ValidUser()) {

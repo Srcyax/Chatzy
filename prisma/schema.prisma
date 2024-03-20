@@ -39,6 +39,7 @@ model ActiveUsers {
 model Comment {
   id          Int       @id @default(autoincrement())
   text        String   
+  at          String 
   author      User      @relation(fields: [authorId], references: [id])
   authorId    Int
   edited      Boolean   @default(false)

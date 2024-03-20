@@ -44,7 +44,7 @@ export function CreateForum() {
 	function handleCreateForum(data: any) {
 		return toast.promise(
 			axios
-				.post("/api/forum/createForum", {
+				.post("/api/admin/forums/createForum", {
 					title: data.title,
 					description: data.description,
 				})

@@ -82,14 +82,13 @@ export function CreateThread({ forum }: { forum: string }) {
 						.then(() => {
 							router.push(`/forum/thread/${res.data.thread.id}`);
 						});
-					setSubmit(false);
 				})
-				.catch(() => {
+				.catch((error) => {
+					toast.error(error.response.data.error);
 					setSubmit(false);
 				}),
 			{
 				loading: "Creating thread...",
-				success: "Successfully created",
 				error: "Error when creating",
 			}
 		);
@@ -105,6 +104,7 @@ export function CreateThread({ forum }: { forum: string }) {
 			<main className="m-16 flex flex-col gap-5">
 				<div>
 					<Button
+						disabled={submit || isLoading}
 						className="h-9"
 						onClick={() => {
 							router.back();
@@ -148,7 +148,7 @@ export function CreateThread({ forum }: { forum: string }) {
 								<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleCreateThread)} action="">
 									<div className="flex flex-col gap-4">
 										<div>
-											<Input {...register("title")} disabled={submit} placeholder="Title" />
+											<Input {...register("title")} disabled={submit || isLoading} placeholder="Title" />
 											{errors.title?.message && (
 												<p className="my-1 text-[12px] text-red-500">{errors.title?.message as string}</p>
 											)}
@@ -156,7 +156,7 @@ export function CreateThread({ forum }: { forum: string }) {
 
 										<div>
 											<Textarea
-												disabled={submit}
+												disabled={submit || isLoading}
 												className="h-28 resize-none"
 												{...register("description")}
 												placeholder="Description"

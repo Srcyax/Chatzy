@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 		});
 
 		if (!validateUser) {
-			return NextResponse.json({ error: "Not allowed" }, { status: 500 });
+			return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 		}
 
 		await prisma.forum.delete({
