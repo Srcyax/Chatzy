@@ -1,14 +1,15 @@
 import { prisma } from "@/functions/prisma";
+import { ValidUser } from "@/functions/validUser";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
-	const token = cookies().get("token")?.value;
+	const token = cookies().get("token")?.value as string;
 
-	if (!token) {
-		return NextResponse.json({ error: "Not allowed" }, { status: 500 });
+	if (!ValidUser()) {
+		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 	}
 
 	try {

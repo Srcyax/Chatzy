@@ -2,16 +2,17 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prisma } from "@/functions/prisma";
+import { ValidUser } from "@/functions/validUser";
 
 export async function POST(req: NextRequest) {
-	const token = cookies().get("token");
-
-	if (!token) {
-		return NextResponse.json({});
+	if (!ValidUser()) {
+		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 	}
 
+	const token = cookies().get("token")?.value as string;
+
 	try {
-		const user = jwt.verify(token.value, process.env.JWT_SECRET as string) as JwtPayload;
+		const user = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
 		if (!user) {
 			return NextResponse.json({});
@@ -43,6 +44,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+	if (!ValidUser()) {
+		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
+	}
+
 	try {
 		const activeUsers = await prisma.activeUsers.findMany();
 		if (!activeUsers) return NextResponse.json({ users: null });

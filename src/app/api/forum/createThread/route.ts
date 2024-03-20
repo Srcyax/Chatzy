@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
 	const body = await req.json();
 
 	if (!ValidUser()) {
-		return NextResponse.json({ error: "Not allowed" }, { status: 500 });
+		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 	}
 
 	const token = cookies().get("token")?.value as string;

@@ -6,7 +6,7 @@ import { prisma } from "@/functions/prisma";
 
 export async function GET() {
 	if (!ValidUser()) {
-		return NextResponse.json({ error: "Not allowed" }, { status: 500 });
+		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 	}
 
 	const token = cookies().get("token")?.value as string;

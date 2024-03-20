@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 	const { comment, id } = body;
 
 	if (!ValidUser()) {
-		return NextResponse.json({ error: "Not allowed" }, { status: 500 });
+		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 	}
 
 	if (!ValidateInput(comment, 125)) {

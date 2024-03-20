@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 	const { comment } = body;
 
 	if (!ValidUser()) {
-		return NextResponse.json({ error: "Not allowed" }, { status: 500 });
+		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 	}
 
 	if (!ValidateInput(comment, 125)) {
@@ -57,6 +57,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+	if (!ValidUser()) {
+		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
+	}
+
 	try {
 		const comments = await prisma.comment.findMany({
 			include: {

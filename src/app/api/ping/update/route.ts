@@ -2,9 +2,13 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { differenceInSeconds } from "date-fns";
 import { PrismaClient } from "@prisma/client";
+import { ValidUser } from "@/functions/validUser";
 
 export async function POST(req: NextRequest) {
-	const token = cookies().get("token");
+	if (!ValidUser()) {
+		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
+	}
+
 	const prisma = new PrismaClient();
 
 	const inactivityThreshold = 10;
