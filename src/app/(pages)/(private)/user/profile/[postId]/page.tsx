@@ -5,8 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { Undo2 } from "lucide-react";
+import { Undo2, UserPlus } from "lucide-react";
 import { About } from "../Components/About";
+import { AddFriend } from "../Components/AddFriend";
 
 export default function Page({ params }: any) {
 	const router = useRouter();
@@ -68,6 +69,9 @@ export default function Page({ params }: any) {
 										<h1>{data?.userProfile.role}</h1>
 									</div>
 									<h1>id: {data?.userProfile?.id}</h1>
+									{!data?.isOwner && data?.userProfile.role !== "banned" && (
+										<AddFriend id={data?.userProfile?.id} />
+									)}
 								</div>
 							)}
 						</div>

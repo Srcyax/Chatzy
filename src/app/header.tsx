@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Bell, Check, Contact, X } from "lucide-react";
 
 import {
 	DropdownMenu,
@@ -13,8 +14,9 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import axios from "axios";
+import { Notification } from "@/components/notifications";
 
-type User = {
+type Notification = {
 	username: string;
 	role: string | null;
 };
@@ -45,6 +47,9 @@ export default function Header({
 						Admin
 					</Button>
 				)}
+
+				<Notification />
+
 				<DropdownMenu>
 					<DropdownMenuTrigger>
 						<Avatar>
