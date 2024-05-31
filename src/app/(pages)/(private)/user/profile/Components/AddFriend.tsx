@@ -9,7 +9,7 @@ export function AddFriend({ id }: { id: number }) {
 	async function Add() {
 		toast.promise(
 			axios
-				.post("/api/notifications/friend_request", {
+				.post("/api/user/friendship/send", {
 					id: id,
 				})
 				.then((res) => {

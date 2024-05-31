@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import axios from "axios";
 import { Notification } from "@/components/notifications";
+import { Friends } from "@/components/friends";
 
 type Notification = {
 	username: string;
@@ -37,7 +38,7 @@ export default function Header({
 			<Link href="/" className="text-3xl font-bold">
 				Chat<strong className="text-orange-400">zy</strong>
 			</Link>
-
+			<Friends />
 			<div className="flex gap-4">
 				<Button variant="outline" onClick={() => router.push("/dashboard")}>
 					Dashboard

@@ -18,30 +18,24 @@ model User {
   username    String    @unique
   password    String?
   about       String
-  notifications Notifications[]
   friends     Friend[]
+  friendRequests     FriendRequest[]
   role        Role?     @default(registered)
   comments    Comment[]
 }
 
 model Friend {
   id          Int       @id @default(autoincrement())
-  friendId    Int
+  username    String
   user        User      @relation(fields: [userId], references: [id])
   userId      Int       @unique
 }
 
-model Notifications {
+model FriendRequest {
   id          Int       @id @default(autoincrement())
-  title       String
+  requester   String       
   user        User      @relation(fields: [userId], references: [id])
   userId      Int       @unique
-  type        NotificationType?
-}
-
-enum NotificationType {
-  friend_request
-  reputation
 }
 
 model ActiveUsers {

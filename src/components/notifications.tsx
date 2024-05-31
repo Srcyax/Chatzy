@@ -13,22 +13,22 @@ import { Bell, Check, Contact, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-type Notifications = {
+type Requests = {
 	id: number;
-	title: string;
+	requester: string;
 	userId: number;
 };
 
 export function Notification() {
-	const [notifications, getNotifications] = useState<Notifications[]>([]);
+	const [requests, getRequests] = useState<Requests[]>([]);
 
 	const { data, isLoading } = useQuery({
-		queryKey: ["list-friend"],
+		queryKey: ["list-friendrequest"],
 		queryFn: async () => {
 			return axios
-				.get("/api/notifications/listall")
+				.get("/api/user/friendship/requests")
 				.then((res) => {
-					getNotifications(res.data.notifications);
+					getRequests(res.data.requests);
 					return res.data;
 				})
 				.catch((error) => {
@@ -51,22 +51,24 @@ export function Notification() {
 			<DropdownMenuContent>
 				<DropdownMenuLabel>Notifications</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				{notifications.length ? (
-					notifications.map((notification, index) => (
+				{requests.length ? (
+					requests.map((request, index) => (
 						<div key={index} className="h-10 flex gap-4 items-center border rounded-sm px-5">
 							<Contact />
-							<h1 className="py-2 text-[12px]">{notification.title}</h1>
+							<h1 className="py-2 text-[12px]">
+								<strong>{request.requester}</strong> wants to be your friend
+							</h1>
 							<div className="flex gap-2">
 								<Check
 									onClick={async () => {
 										axios
 											.post("/api/user/friendship/accept", {
-												id: notification.userId,
-												notiId: notification.id,
+												id: request.userId,
+												notiId: request.id,
 											})
 											.then((res) => {
 												queryClient.fetchQuery({
-													queryKey: ["list-friend"],
+													queryKey: ["list-friendrequest"],
 												});
 											})
 											.catch((error) => {});
@@ -82,9 +84,7 @@ export function Notification() {
 				)}
 
 				<DropdownMenuSeparator />
-				{notifications.length ? (
-					<h1 className="text-center underline">read all notifications</h1>
-				) : null}
+				{requests.length ? <h1 className="text-center underline">read all notifications</h1> : null}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

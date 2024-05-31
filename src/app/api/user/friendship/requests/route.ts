@@ -1,12 +1,10 @@
 import { prisma } from "@/functions/prisma";
 import { ValidUser } from "@/functions/validUser";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { cookies } from "next/headers";
 
-export async function POST(req: NextRequest) {
-	const body = await req.json();
-
+export async function GET() {
 	if (!ValidUser()) {
 		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 	}
@@ -16,7 +14,15 @@ export async function POST(req: NextRequest) {
 	try {
 		const { id } = jwt.decode(token) as JwtPayload;
 
-		return NextResponse.json({ message: "success" });
+		const requests = await prisma.friendRequest.findMany({
+			where: {
+				userId: id,
+			},
+		});
+
+		console.log(requests);
+
+		return NextResponse.json({ requests });
 	} catch (error) {
 		console.log(error);
 		return NextResponse.json({});

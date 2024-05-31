@@ -4,7 +4,9 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-export async function GET() {
+export async function POST(req: NextRequest) {
+	const body = await req.json();
+
 	if (!ValidUser()) {
 		return NextResponse.json({ error: "Not allowed" }, { status: 401 });
 	}
@@ -12,20 +14,25 @@ export async function GET() {
 	const token = cookies().get("token")?.value as string;
 
 	try {
-		const { id } = jwt.decode(token) as JwtPayload;
+		const { username } = jwt.decode(token) as JwtPayload;
 
-		const user = await prisma.user.findUnique({
+		const request_friend = await prisma.user.update({
 			where: {
-				id: id,
+				id: body.id,
 			},
-			include: {
-				notifications: true,
+			data: {
+				friendRequests: {
+					create: {
+						requester: username,
+					},
+				},
 			},
 		});
 
-		return NextResponse.json({ notifications: user?.notifications });
+		console.log(request_friend);
+
+		return NextResponse.json({});
 	} catch (error) {
 		console.log(error);
-		return NextResponse.json({});
 	}
 }
