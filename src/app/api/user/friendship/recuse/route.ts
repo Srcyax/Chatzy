@@ -10,11 +10,11 @@ export async function POST(req: NextRequest) {
 	}
 
 	try {
-		await prisma.notifications.delete({
+		/*await prisma.notifications.delete({
 			where: {
 				id: body.id,
 			},
-		});
+		});*/
 
 		return NextResponse.json({ message: "success" });
 	} catch (error) {
